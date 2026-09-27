@@ -2,6 +2,20 @@
 
 Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (priorisé), **Plus tard** (retenu mais retardé), **Fait** (livré), **Idée** (piste non priorisée). Cochez en modifiant directement ce fichier quand une fonctionnalité est livrée.
 
+## État en un coup d'œil (v0.2.2)
+
+| Priorité | Fait | Restant |
+|---|---|---|
+| 1 — Cœur « préparation agrégation » | 18 | 2 à faire (+3 reportés) |
+| 2 — Confort quotidien | 0 | 4 |
+| 3 — Section Cours (PDF) | 1 | 2 |
+| 4 — Graphisme / polish | 0 | 3 (+2 idées) |
+| 5 — Technique | 0 | 2 |
+| Déjà livré (pour mémoire) | 12 | — |
+| **Total** | **31** | **13 (+5 reportés/idées)** |
+
+**Prochaines étapes (priorité 1)** : compilation autonome des leçons (`.tex` exportable), puis des développements.
+
 ## Priorité 1 — Cœur « préparation agrégation »
 
 ### À faire

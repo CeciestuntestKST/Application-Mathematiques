@@ -12,6 +12,20 @@ npm run dev      # lance l'application avec les DevTools ouverts
 npm test         # tests unitaires de la logique LaTeX (Node, sans Electron)
 ```
 
+## Feuille de route
+
+Le détail de ce qui est **fait**, **à faire** et **reporté** est maintenu dans [`TODO.md`](TODO.md). État en un coup d'œil (v0.2.2) :
+
+| Priorité | Fait | Restant |
+|---|---|---|
+| 1 — Cœur « préparation agrégation » | 18 | 2 à faire (+3 reportés) |
+| 2 — Confort quotidien | 0 | 4 |
+| 3 — Section Cours (PDF) | 1 | 2 |
+| 4 — Graphisme / polish | 0 | 3 (+2 idées) |
+| 5 — Technique | 0 | 2 |
+
+Livrées à ce jour : sections **Cours** (lecteur PDF pdf.js embarqué, recherche texte), **Notions** (extraction/fusion/recherche plein texte), **Oral** (registre des numéros de leçon, aperçus intégrés des plans et développements en fiches compactes), **Plans** et **Développements** (éditeurs LaTeX avec bibliothèque de notions), rechargement automatique du dossier, mise à jour automatique de l'app. Prochaines étapes : compilation autonome des leçons et développements (export `.tex` autonome compilable).
+
 ## Organisation du dossier de cours
 
 L'utilisateur sélectionne un dossier via « Ouvrir un dossier » (mémorisé d'une session à l'autre). Le dossier peut contenir, **dans des sous-dossiers** (parcours récursif) : 
