@@ -1444,6 +1444,20 @@ html, body {
   color: #f48771;
   border-color: #f48771;
 }
+.export-btn {
+  background: transparent;
+  color: var(--vs-text-dim);
+  border: 1px solid var(--vs-border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.export-btn:hover {
+  color: var(--vs-accent, #4fc1ff);
+  border-color: var(--vs-accent, #4fc1ff);
+}
 
 #lesson-edit-body {
   display: flex;

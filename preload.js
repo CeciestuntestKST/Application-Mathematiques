@@ -34,5 +34,6 @@ contextBridge.exposeInMainWorld('api', {
   saveDev: (dev) => ipcRenderer.invoke('app:devs-save', dev),
   deleteDev: (devPath) => ipcRenderer.invoke('app:devs-delete', devPath),
   parseDevContent: (content) => ipcRenderer.invoke('app:dev-parse', content),
+  exportTex: (payload) => ipcRenderer.invoke('app:export-tex', payload),
   platform: process.platform
 });

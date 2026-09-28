@@ -6,25 +6,21 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 
 | Priorité | Fait | Restant |
 |---|---|---|
-| 1 — Cœur « préparation agrégation » | 18 | 2 à faire (+3 reportés) |
+| 1 — Cœur « préparation agrégation » | 20 | 0 (+3 reportés) |
 | 2 — Confort quotidien | 0 | 4 |
 | 3 — Section Cours (PDF) | 1 | 2 |
 | 4 — Graphisme / polish | 0 | 3 (+2 idées) |
 | 5 — Technique | 0 | 2 |
 | Déjà livré (pour mémoire) | 12 | — |
-| **Total** | **31** | **13 (+5 reportés/idées)** |
+| **Total** | **33** | **11 (+5 reportés/idées)** |
 
-**Prochaines étapes (priorité 1)** : compilation autonome des leçons (`.tex` exportable), puis des développements.
+**Priorité 1 terminée.** Prochaines étapes possibles : raccourcis clavier globaux (priorité 2), surlignage persistant des PDF (priorité 3).
 
 ## Priorité 1 — Cœur « préparation agrégation »
 
-### À faire
-
-- [ ] **Leçons d'oral — compilation autonome** : bouton d'export d'un `.tex` autonome compilable (préambule repris du `settings.tex` autour du plan actuel de la leçon), via une boîte de dialogue native.
-
-- [ ] **Développements — compilation autonome** : bouton d'export d'un `.tex` autonome compilable (préambule repris du `settings.tex`), comme pour les leçons.
-
 ### Fait
+- [x] **Leçons d'oral — compilation autonome** : bouton **« Exporter .tex »** dans la toolbar de l'éditeur de plans — génère un `.tex` **autonome compilable** (documentclass + préambule repris du `settings.tex` du dossier de cours, ou préambule de repli s'il n'existe pas) autour du plan actuel de la leçon, via une boîte de dialogue native de sauvegarde ; les lignes de métadonnées `% lesson-meta:` sont retirées, le contenu est sauvegardé avant l'export.
+- [x] **Développements — compilation autonome** : bouton **« Exporter .tex »** dans la toolbar de l'éditeur de développements — même principe que pour les leçons (préambule du `settings.tex`, métadonnées `% dev-meta:` retirées, titre échappé) ; `lib/tex-export.js` (Node pur, testé).
 - [x] **Dialogues applicatifs maison (correctif Renommer/Retirer/Supprimer)** : `window.prompt` / `window.confirm` ne fonctionnent pas dans Electron (boîtes silencieusement ignorées — le renommage des leçons et les suppressions ne faisaient rien). Remplacés par un dialogue maison intégré au thème : `showAppDialog()` (mode prompt avec champ prérempli, ou confirm), boutons Enregistrer/Retirer/Supprimer, validation par Entrée, annulation par Échap ou Annuler. Appliqué au renommage/retrait des leçons de l'oral (menu ⋯) et aux suppressions de plans et de développements.
 - [x] **Fiches compactes généralisées à tous les aperçus** : dans les aperçus des éditeurs **Plans** et **Développements**, les noms des notions ne sont plus affichés — les blocs adoptent le même rendu compact que la section Oral (« ‹Type› : ‹corps› » en un seul flux dense, sans badge ni titre) ; l'aperçu de l'éditeur Plans ressemble ainsi d'avantage à l'aperçu du bloc de plan de la section Oral.
 - [x] **Oral — blocs notions compacts et anti-troncature dans les aperçus** : dans les aperçus intégrés (plans et développements) de la section Oral, badge et titre des blocs notions sont supprimés ; le type de la notion ouvre directement le corps en un seul flux « ‹Type› : ‹corps› » très dense. Correctif racine de la troncature : les vues de rendu sont des conteneurs flex en colonne dont les enfants rétrécissaient verticalement (`flex-shrink` par défaut) — désormais `flex-shrink: 0` (le conteneur scrolle, tout est déplié, le texte libre n'a plus de zone déroulante interne) ; les formules larges défilent horizontalement en local (`overflow-x: auto` + `text-align: safe center`). Les aperçus des sections Plans et Développements utilisent désormais la même fiche compacte (badge et nom de notion supprimés, « ‹Type› : ‹corps› » en un seul flux dense) — le panneau Devs reçoit aussi le correctif anti-troncature (`flex-shrink: 0`).
@@ -103,6 +99,6 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 - [x] Installateur Windows automatique via GitHub Actions (tag `v*` → release).
 - [x] **Mise à jour automatique** de l'app installée (electron-updater + releases GitHub) : bannière dans le footer de la sidebar, téléchargement en arrière-plan, bouton « Redémarrer » pour installer ; silence en dev et non-packagé ; `latest.yml` attaché à la release.
 - [x] Raccourcis basiques d'app (recherche, navigation dans la grille).
-- [x] **Suite de tests unitaires** (`npm test`) : 55 tests sur le parsing `settings.tex`, l'extraction des notions, le modèle (nommage, preuves, fusion), les fichiers de leçons (`lesson-files.js`), de développements (`dev-files.js`), le registre de l'oral (`oral-files.js`) et le watcher — sans Electron.
+- [x] **Suite de tests unitaires** (`npm test`) : 58 tests sur le parsing `settings.tex`, l'extraction des notions, le modèle (nommage, preuves, fusion), les fichiers de leçons (`lesson-files.js`), de développements (`dev-files.js`), le registre de l'oral (`oral-files.js`), l'export `.tex` autonome (`tex-export.js`) et le watcher — sans Electron.
 - [x] **Version dans le titre de la fenêtre** : « Application Mathématiques vX.Y.Z », lue dynamiquement depuis `package.json` (aucune mise à jour manuelle à prévoir).
 - [x] **Bannière de mise à jour corrigée** : la fonction `initUpdateBanner` manquante a été implémentée (ReferenceError qui bloquait le renderer) ; bannière en bas de la sidebar — téléchargement avec pourcentage, bouton « Redémarrer » quand la mise à jour est prête, bouton « Réessayer » en cas d'erreur.

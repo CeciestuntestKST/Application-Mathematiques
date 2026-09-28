@@ -43,6 +43,7 @@ const {
   isPathInDevsDir,
   normalizeLessonNumbers
 } = require('../lib/dev-files');const {  makeOralLessonId,  normalizeOralLesson,  readOralRegistry,  writeOralRegistry,  saveOralLesson,  deleteOralLesson} = require('../lib/oral-files');
+const texExport = require('../lib/tex-export');
 
 function makeTempFolder() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'maths-app-test-'));
@@ -769,6 +770,52 @@ test('extractSections detecte chapter/section/subsection (etoilees, optionnel, c
   assert.strictEqual(sections[4].title, 'Titre long');
   assert.deepStrictEqual(extractSections(''), []);
   assert.deepStrictEqual(extractSections(null), []);
+});
+
+/* ---------- tex-export ---------- */
+test('stripMetaLines retire les en-têtes lesson-meta et dev-meta', () => {
+  const content = [
+    '% lesson-meta: {"number":142,"title":"X"}',
+    '% dev-meta: {"title":"Y"}',
+    '\\begin{df}{Titre}{}',
+    'Corps',
+    '\\end{df}'
+  ].join('\n');
+  const stripped = texExport.stripMetaLines(content);
+  assert.ok(!stripped.includes('lesson-meta'));
+  assert.ok(!stripped.includes('dev-meta'));
+  assert.ok(stripped.includes('\\begin{df}{Titre}{}'));
+});
+
+test('buildStandaloneTex pour une leçon : documentclass, préambule settings, titre et \end{document}', () => {
+  const tex = texExport.buildStandaloneTex({
+    kind: 'lesson',
+    number: 142,
+    title: 'Séries de Fourier',
+    content: '% lesson-meta: {"number":142}\n\\section{Introduction}\nCorps',
+    settingsContent: '\\usepackage{amsmath}\n\\newcommand{\\R}{\\mathbb{R}}'
+  });
+  assert.ok(tex.startsWith('% Document autonome'));
+  assert.ok(tex.includes('\\documentclass{article}'));
+  assert.ok(tex.includes('\\usepackage{amsmath}'));
+  assert.ok(tex.includes('\\newcommand{\\R}{\\mathbb{R}}'));
+  assert.ok(tex.includes('Leçon 142 — Séries de Fourier'));
+  assert.ok(tex.includes('\\section{Introduction}'));
+  assert.ok(!tex.includes('lesson-meta'));
+  assert.ok(tex.trim().endsWith('\\end{document}'));
+});
+
+test('buildStandaloneTex pour un développement : titre échappé, préambule de repli sans settings', () => {
+  const tex = texExport.buildStandaloneTex({
+    kind: 'dev',
+    title: 'Théorème & de Kronecker %',
+    content: '% dev-meta: {"title":"K"}\nCorps du dev'
+  });
+  assert.ok(tex.includes('Théorème \\& de Kronecker \\%'));
+  assert.ok(tex.includes(texExport.FALLBACK_PREAMBLE.split('\n')[0]));
+  assert.ok(tex.includes('Corps du dev'));
+  assert.ok(!tex.includes('dev-meta'));
+  assert.ok(tex.includes('\\end{document}'));
 });
 
 /* ---------- oral-files ---------- */

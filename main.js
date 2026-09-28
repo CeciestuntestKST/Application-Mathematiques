@@ -11,6 +11,7 @@ const autoUpdate = require('./lib/auto-update');
 const lessonFiles = require('./lib/lesson-files');
 const devFiles = require('./lib/dev-files');
 const oralFiles = require('./lib/oral-files');
+const texExport = require('./lib/tex-export');
 
 const isDev = process.argv.includes('--dev');
 let mainWindow = null;
@@ -402,6 +403,51 @@ ipcMain.handle('app:devs-delete', async (_event, devPath) => {
   }
   const ok = devFiles.deleteDevFile(devPath);
   return ok ? { ok: true } : { error: 'delete-failed' };
+});
+
+ipcMain.handle('app:export-tex', async (_event, payload) => {
+  if (!payload || typeof payload !== 'object' || typeof payload.content !== 'string') {
+    return { error: 'invalid-payload' };
+  }
+  const kind = payload.kind === 'dev' ? 'dev' : 'lesson';
+  const folder = requireCourseFolder();
+  let settingsContent = '';
+  if (folder) {
+    try {
+      const result = readSettings(folder);
+      if (result.found) {
+        settingsContent = fs.readFileSync(result.path, 'utf-8');
+      }
+    } catch (err) {
+      if (isDev) {
+        console.error('lecture de settings.tex impossible:', err);
+      }
+    }
+  }
+  const tex = texExport.buildStandaloneTex({
+    kind,
+    number: typeof payload.number === 'number' ? payload.number : null,
+    title: typeof payload.title === 'string' ? payload.title : '',
+    content: payload.content,
+    settingsContent
+  });
+  const defaultName = kind === 'dev'
+    ? lessonFiles.slugify(payload.title || 'developpement') + '-export.tex'
+    : `lecon-${typeof payload.number === 'number' && payload.number > 0 ? String(payload.number).padStart(2, '0') : 'x'}-export.tex`;
+  const result = await dialog.showSaveDialog(mainWindow, {
+    title: kind === 'dev' ? 'Exporter le développement (.tex autonome)' : 'Exporter la leçon (.tex autonome)',
+    defaultPath: defaultName,
+    filters: [{ name: 'LaTeX', extensions: ['tex'] }]
+  });
+  if (result.canceled || !result.filePath) {
+    return { canceled: true, path: null };
+  }
+  try {
+    await fs.promises.writeFile(result.filePath, tex, 'utf-8');
+    return { canceled: false, path: result.filePath };
+  } catch (err) {
+    return { error: err.code || 'write-error' };
+  }
 });
 
 ipcMain.handle('app:dev-parse', async (_event, content) => {

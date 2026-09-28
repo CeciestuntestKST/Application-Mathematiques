@@ -89,6 +89,7 @@
     lessonTitleInput: document.getElementById('lesson-title-input'),
     lessonSaveStatus: document.getElementById('lesson-save-status'),
     lessonDeleteBtn: document.getElementById('lesson-delete'),
+    lessonExportBtn: document.getElementById('lesson-export'),
     lessonTexInput: document.getElementById('lesson-tex-input'),
     lessonRenderView: document.getElementById('lesson-render-view'),
     lessonViewCodeBtn: document.getElementById('lesson-view-code'),
@@ -109,6 +110,7 @@
     devTitleInput: document.getElementById('dev-title-input'),
     devSaveStatus: document.getElementById('dev-save-status'),
     devDeleteBtn: document.getElementById('dev-delete'),
+    devExportBtn: document.getElementById('dev-export'),
     devTexInput: document.getElementById('dev-tex-input'),
     devRenderView: document.getElementById('dev-render-view'),
     devViewCodeBtn: document.getElementById('dev-view-code'),
@@ -3710,6 +3712,28 @@
       updateLessonModeVisibility();
     });
   }
+  if (els.lessonExportBtn) {
+    els.lessonExportBtn.addEventListener('click', async () => {
+      const lesson = getActiveLesson();
+      if (!lesson) {
+        return;
+      }
+      await saveActiveLesson();
+      const result = await window.api.exportTex({
+        kind: 'lesson',
+        number: lesson.number || null,
+        title: lesson.title || '',
+        content: lesson.content || ''
+      });
+      if (result && result.error) {
+        if (els.lessonSaveStatus) {
+          els.lessonSaveStatus.textContent = `Erreur : ${result.error}`;
+        }
+      } else if (result && !result.canceled && els.lessonSaveStatus) {
+        els.lessonSaveStatus.textContent = `Exporté — ${result.path}`;
+      }
+    });
+  }
   if (els.lessonImportSearch) {
     let importSearchTimer = null;
     els.lessonImportSearch.addEventListener('input', () => {
@@ -3864,6 +3888,27 @@
         renderDevRenderView();
       }
       updateDevModeVisibility();
+    });
+  }
+  if (els.devExportBtn) {
+    els.devExportBtn.addEventListener('click', async () => {
+      const dev = getActiveDev();
+      if (!dev) {
+        return;
+      }
+      await saveActiveDev();
+      const result = await window.api.exportTex({
+        kind: 'dev',
+        title: dev.title || '',
+        content: dev.content || ''
+      });
+      if (result && result.error) {
+        if (els.devSaveStatus) {
+          els.devSaveStatus.textContent = `Erreur : ${result.error}`;
+        }
+      } else if (result && !result.canceled && els.devSaveStatus) {
+        els.devSaveStatus.textContent = `Exporté — ${result.path}`;
+      }
     });
   }
   if (els.devLessonsNumbers) {
