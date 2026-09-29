@@ -1455,6 +1455,7 @@ html, body {
 }
 
 .lesson-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -2519,7 +2520,7 @@ html, body {
   opacity: 0;
 }
 
-.oral-card:hover .oral-card-menu-btn,
+.lesson-card:hover .oral-card-menu-btn,
 .oral-card-menu-btn:focus {
   opacity: 1;
 }

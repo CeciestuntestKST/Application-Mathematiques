@@ -2366,6 +2366,37 @@
     document.removeEventListener('click', closeOralCardMenu);
   }
 
+  function buildCardMenuItem(label, onAction) {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'card-menu-item';
+    item.textContent = label;
+    item.addEventListener('click', (event) => {
+      event.stopPropagation();
+      closeOralCardMenu();
+      onAction();
+    });
+    return item;
+  }
+
+  function openLessonCardMenu(anchor, lesson) {
+    closeOralCardMenu();
+    const menu = document.createElement('div');
+    menu.className = 'card-menu';
+    menu.appendChild(buildCardMenuItem('Supprimer', () => deleteLessonById(lesson.id)));
+    anchor.parentNode.appendChild(menu);
+    document.addEventListener('click', closeOralCardMenu);
+  }
+
+  function openDevCardMenu(anchor, dev) {
+    closeOralCardMenu();
+    const menu = document.createElement('div');
+    menu.className = 'card-menu';
+    menu.appendChild(buildCardMenuItem('Supprimer', () => deleteDevById(dev.id)));
+    anchor.parentNode.appendChild(menu);
+    document.addEventListener('click', closeOralCardMenu);
+  }
+
   function openOralCardMenu(anchor, number) {
     closeOralCardMenu();
     const menu = document.createElement('div');
@@ -2877,6 +2908,16 @@
         renderLeconsSidebar();
         updateLeconsView();
       });
+      const lessonMenuBtn = document.createElement('button');
+      lessonMenuBtn.type = 'button';
+      lessonMenuBtn.className = 'oral-card-menu-btn';
+      lessonMenuBtn.textContent = '\u22ef';
+      lessonMenuBtn.title = 'Supprimer ce plan';
+      lessonMenuBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openLessonCardMenu(lessonMenuBtn, lesson);
+      });
+      card.appendChild(lessonMenuBtn);
       els.leconsCards.appendChild(card);
     }
   }
@@ -3157,8 +3198,8 @@
     }
   }
 
-  async function deleteActiveLesson() {
-    const lesson = getActiveLesson();
+  async function deleteLessonById(lessonId) {
+    const lesson = state.lessons.find((l) => l.id === lessonId) || getActiveLesson();
     if (!lesson || !lesson.path) {
       return;
     }
@@ -3173,7 +3214,9 @@
     }
     const result = await window.api.deleteLesson(lesson.path);
     if (result && !result.error) {
-      state.activeLessonId = null;
+      if (state.activeLessonId === lesson.id) {
+        state.activeLessonId = null;
+      }
       await loadLessons();
       renderLeconsSidebar();
       updateLeconsView();
@@ -3328,6 +3371,16 @@
         renderDevsSidebar();
         updateDevsView();
       });
+      const devMenuBtn = document.createElement('button');
+      devMenuBtn.type = 'button';
+      devMenuBtn.className = 'oral-card-menu-btn';
+      devMenuBtn.textContent = '\u22ef';
+      devMenuBtn.title = 'Supprimer ce d\u00e9veloppement';
+      devMenuBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openDevCardMenu(devMenuBtn, dev);
+      });
+      card.appendChild(devMenuBtn);
       els.devsCards.appendChild(card);
     }
   }
@@ -3725,8 +3778,8 @@
     }
   }
 
-  async function deleteActiveDev() {
-    const dev = getActiveDev();
+  async function deleteDevById(devId) {
+    const dev = state.devs.find((d) => d.id === devId) || getActiveDev();
     if (!dev || !dev.path) {
       return;
     }
@@ -3741,7 +3794,9 @@
     }
     const result = await window.api.deleteDev(dev.path);
     if (result && !result.error) {
-      state.activeDevId = null;
+      if (state.activeDevId === dev.id) {
+        state.activeDevId = null;
+      }
       await loadDevs();
       renderDevsSidebar();
       updateDevsView();
@@ -3787,7 +3842,7 @@
     });
   }
   if (els.lessonDeleteBtn) {
-    els.lessonDeleteBtn.addEventListener('click', deleteActiveLesson);
+    els.lessonDeleteBtn.addEventListener('click', () => deleteLessonById(null));
   }
   if (els.lessonTitleInput) {
     els.lessonTitleInput.addEventListener('input', () => {
@@ -3972,7 +4027,7 @@
     });
   }
   if (els.devDeleteBtn) {
-    els.devDeleteBtn.addEventListener('click', deleteActiveDev);
+    els.devDeleteBtn.addEventListener('click', () => deleteDevById(null));
   }
   if (els.devTitleInput) {
     els.devTitleInput.addEventListener('input', () => {
