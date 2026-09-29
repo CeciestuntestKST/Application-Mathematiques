@@ -387,8 +387,18 @@
     return html;
   }
 
-  const RAW_ENV_RE = /\\begin\{(tikzpicture|tabular\*?|figure\*?|table\*?)\}([\s\S]*?)\\end\{\1\}/g;
+  const RAW_ENV_RE = /\\begin\{(tikzpicture|figure\*?|table\*?)\}([\s\S]*?)\\end\{\1\}/g;
+  const TABULAR_ENV_RE = /\\begin\{(tabular\*?)\}([\s\S]*?)\\end\{\1\}/g;
   const DISPLAY_BLOCK_RE = /\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]|\\begin\{(align\*?|gather\*?|equation\*?|displaymath)\}([\s\S]*?)\\end\{\3\}/g;
+
+  function tabularToKatexArray(block) {
+    return block
+      .replace(/\$([^$\n]*)\$/g, '$1')
+      .replace(/\\multicolumn\{\d+\}\{[^{}]*\}\{([^{}]*)\}/g, '$1')
+      .replace(/\\cline\{[^{}]*\}/g, '')
+      .replace(/\\begin\{tabular\*?\}/g, '\\begin{array}')
+      .replace(/\\end\{tabular\*?\}/g, '\\end{array}');
+  }
 
   function renderLatexBody(body, macros) {
     const container = document.createElement('div');
@@ -398,7 +408,8 @@
     }
     const displayBlocks = [];
     const rawBlocks = [];
-    let src = body.replace(RAW_ENV_RE, (m) => {
+    let src = body.replace(TABULAR_ENV_RE, (m) => `\\[${tabularToKatexArray(m)}\\]`);
+    src = src.replace(RAW_ENV_RE, (m) => {
       rawBlocks.push(m);
       return `\u0001R${rawBlocks.length - 1}\u0001`;
     });
