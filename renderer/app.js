@@ -1889,7 +1889,7 @@
       const close = document.createElement('button');
       close.className = 'notion-tab-close';
       close.textContent = '×';
-      close.title = 'Fermer';
+      close.title = 'Fermer (Ctrl+W)';
       close.addEventListener('click', (e) => closeNotion(notion.id, e));
       tab.appendChild(close);
       tab.addEventListener('click', () => {
@@ -1921,7 +1921,36 @@
         : 'Code source';
     });
     actions.appendChild(sourceToggle);
-
+    const checkBtn = document.createElement('button');
+    checkBtn.textContent = 'Vérifier';
+    checkBtn.title = 'Vérifier que cette notion compile seule (macros manquantes) — macros du corps comparées à celles de settings.tex';
+    checkBtn.addEventListener('click', () => {
+      const settings = state.scan && state.scan.settings
+        ? { macros: state.scan.settings.macros, environments: state.scan.settings.environments }
+        : { macros: [], environments: [] };
+      const result = window.compileCheck.checkNotionCompiles(notion.body, settings);
+      let existing = card.querySelector('.notion-check-result');
+      if (!existing) {
+        existing = document.createElement('div');
+        existing.className = 'notion-check-result';
+        actions.appendChild(existing);
+      }
+      if (result.ok) {
+        existing.className = 'notion-check-result check-ok';
+        existing.textContent = '✓ Compile seule — aucune macro manquante';
+      } else {
+        existing.className = 'notion-check-result check-error';
+        const parts = [];
+        if (result.missingMacros.length > 0) {
+          parts.push('macros non définies : ' + result.missingMacros.map((m) => '\\' + m).join(', '));
+        }
+        if (result.missingEnvironments.length > 0) {
+          parts.push('environnements non définis : ' + result.missingEnvironments.join(', '));
+        }
+        existing.textContent = '⚠ Ne compile pas seule — ' + parts.join(' ; ');
+      }
+    });
+    actions.appendChild(checkBtn);
     return actions;
   }
 
@@ -4206,8 +4235,85 @@
     updateOralView();
   }
 
+  function focusSectionSearch() {
+    const bySection = {
+      notions: els.notionsSearch,
+      cours: els.pdfSearchInput,
+      oral: els.oralSearch,
+      lecons: els.leconsSearch,
+      developpements: els.devsSearch
+    };
+    const input = bySection[state.section];
+    if (input) {
+      input.focus();
+      input.select();
+    }
+  }
+
+  function cycleNotionTab(direction) {
+    if (state.openNotions.length === 0) {
+      return;
+    }
+    const idx = state.openNotions.findIndex((n) => n.id === state.activeNotionId);
+    const current = idx === -1 ? 0 : idx;
+    const next = (current + direction + state.openNotions.length) % state.openNotions.length;
+    const notion = state.openNotions[next];
+    state.activeNotionId = notion.id;
+    renderNotionTabs();
+    renderNotionViews();
+    updateNotionCardStates();
+  }
+
+  function isTypingTarget(event) {
+    const target = event.target;
+    if (!target) {
+      return false;
+    }
+    const tag = target.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+  }
+
+  function initGlobalShortcuts() {
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && !event.shiftKey && !event.altKey && (event.key === 'f' || event.key === 'F')) {
+        event.preventDefault();
+        focusSectionSearch();
+        return;
+      }
+      if (event.ctrlKey && !event.shiftKey && !event.altKey && (event.key === 'w' || event.key === 'W')) {
+        if (state.section === 'notions' && state.activeNotionId) {
+          event.preventDefault();
+          closeNotion(state.activeNotionId);
+        }
+        return;
+      }
+      if (event.ctrlKey && event.key === 'Tab') {
+        event.preventDefault();
+        cycleNotionTab(event.shiftKey ? -1 : 1);
+        return;
+      }
+      if (event.key === 'F11') {
+        event.preventDefault();
+        if (window.api && window.api.toggleFullscreen) {
+          window.api.toggleFullscreen();
+        }
+        return;
+      }
+      if (event.key === 'Escape' && !isTypingTarget(event)) {
+        const inDetailView = (state.section === 'lecons' && state.activeLessonId)
+          || (state.section === 'developpements' && state.activeDevId)
+          || (state.section === 'oral' && (state.activeOralNumber !== null || state.activeOralPlanId || state.activeOralDevId));
+        if (inDetailView) {
+          event.preventDefault();
+          switchSection(state.section);
+        }
+      }
+    });
+  }
+
   initUpdateBanner();
   applyAppTitle();
+  initGlobalShortcuts();
   loadLessons();
   init();
 })();

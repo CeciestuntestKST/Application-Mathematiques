@@ -45,6 +45,7 @@ const {
 } = require('../lib/dev-files');const {  makeOralLessonId,  normalizeOralLesson,  readOralRegistry,  writeOralRegistry,  saveOralLesson,  deleteOralLesson} = require('../lib/oral-files');
 const texExport = require('../lib/tex-export');
 const latexHighlight = require('../lib/latex-highlight');
+const compileCheck = require('../lib/compile-check');
 
 function makeTempFolder() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'maths-app-test-'));
@@ -838,6 +839,46 @@ test('highlightLatex colore les environnements begin/end et échappe le HTML', (
 test('highlightLatex gère le texte simple sans balise parasite', () => {
   const html = latexHighlight.highlightLatex('Texte simple.');
   assert.strictEqual(html, 'Texte simple.');
+});
+
+/* ---------- compile-check ---------- */
+test('checkNotionCompiles : ok avec commandes standard et macros de settings', () => {
+  const settings = {
+    macros: [{ name: 'R' }, { name: 'ssi' }],
+    environments: [{ name: 'df' }, { name: 'tm' }]
+  };
+  const body = [
+    '\\begin{tm}{Titre}{}',
+    'Soit $f \\in \\R$ continue, $f$ bijective $\\ssi$ injective.',
+    '\\end{tm}'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, true);
+  assert.deepStrictEqual(result.missingMacros, []);
+  assert.deepStrictEqual(result.missingEnvironments, []);
+});
+
+test('checkNotionCompiles : signale macros et environnements manquants', () => {
+  const settings = { macros: [], environments: [] };
+  const body = [
+    '$\\mamacro{x}$ dans \\begin{monenv}{Titre}{}',
+    'Corps',
+    '\\end{monenv}'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, false);
+  assert.ok(result.missingMacros.includes('mamacro'));
+  assert.ok(result.missingEnvironments.includes('monenv'));
+});
+
+test('checkNotionCompiles : ignore les commentaires et les commandes standard', () => {
+  const settings = { macros: [], environments: [] };
+  const body = [
+    '% \\mamacro en commentaire',
+    '\\frac{1}{2} et \\mathbb{N}'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, true);
 });
 
 /* ---------- oral-files ---------- */

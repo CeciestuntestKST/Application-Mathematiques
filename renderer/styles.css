@@ -1272,6 +1272,14 @@ html, body {
 .notion-source-code .tok-math { color: var(--tok-math); }
 .notion-source-code .tok-special { color: var(--tok-special); }
 .notion-source-code .tok-operator { color: var(--tok-operator); }
+.notion-check-result {
+  font-size: 12px;
+  padding: 4px 0 0;
+  margin-left: 8px;
+  display: inline-block;
+}
+.notion-check-result.check-ok { color: var(--vs-success); }
+.notion-check-result.check-error { color: var(--vs-error-text); }
 #theme-toggle {
   display: flex;
   align-items: center;

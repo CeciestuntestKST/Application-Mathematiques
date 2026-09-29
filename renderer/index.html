@@ -79,7 +79,7 @@
           <button id="pdf-zoom-in" title="Zoom avant">+</button>
           <button id="pdf-fit-width" title="Ajuster à la largeur">⤢</button>
           <span class="toolbar-spacer"></span>
-          <input id="pdf-search-input" type="search" placeholder="Rechercher dans le PDF…" />
+          <input id="pdf-search-input" type="search" placeholder="Rechercher dans le PDF… (Ctrl+F)" />
           <button id="pdf-search-prev" class="hidden" title="Occurrence précédente">▲</button>
           <span id="pdf-search-count" class="hidden"></span>
           <button id="pdf-search-next" class="hidden" title="Occurrence suivante">▼</button>
@@ -96,7 +96,7 @@
       </div>
       <div id="reader-notions" class="reader hidden">
         <div id="notions-toolbar" class="toolbar">
-          <input id="notions-search" type="search" placeholder="Rechercher une notion (titre, type, matière, corps)…" />
+          <input id="notions-search" type="search" placeholder="Rechercher une notion — titre, type, matière, corps… (Ctrl+F)" />
           <span class="toolbar-spacer"></span>
           <span id="notions-count"></span>
         </div>
@@ -127,7 +127,7 @@
             <button id="lesson-create-confirm" title="Créer la leçon">Créer</button>
             <button id="lesson-create-cancel" title="Annuler">Annuler</button>
           </div>
-          <input id="lecons-search" type="search" placeholder="Rechercher par numéro de leçon…" />
+          <input id="lecons-search" type="search" placeholder="Rechercher par numéro de leçon… (Ctrl+F)" title="Ctrl+F pour revenir à la recherche" />
           <div id="lecons-grid">
             <div id="lecons-empty-hint" class="hidden">
               <p>Aucun plan pour l'instant.</p>
@@ -177,7 +177,7 @@
             <button id="dev-create-confirm" title="Créer le développement">Créer</button>
             <button id="dev-create-cancel" title="Annuler">Annuler</button>
           </div>
-          <input id="devs-search" type="search" placeholder="Rechercher par numéro de leçon ou titre…" />
+          <input id="devs-search" type="search" placeholder="Rechercher par numéro de leçon ou titre… (Ctrl+F)" title="Ctrl+F pour revenir à la recherche" />
           <div id="devs-grid">
             <div id="devs-empty-hint" class="hidden">
               <p>Aucun développement pour l'instant.</p>
@@ -237,7 +237,7 @@
             <button id="oral-create-confirm" title="Déclarer la leçon">Ajouter</button>
             <button id="oral-create-cancel" title="Annuler">Annuler</button>
           </div>
-          <input id="oral-search" type="search" placeholder="Rechercher un numéro ou un titre de leçon…" />
+          <input id="oral-search" type="search" placeholder="Rechercher un numéro ou un titre de leçon… (Ctrl+F)" title="Ctrl+F pour revenir à la recherche" />
           <div id="oral-grid">
             <div id="oral-empty-hint" class="hidden">
               <p>Aucune leçon déclarée pour l'instant.</p>
@@ -301,6 +301,7 @@
   <script src="../vendor/pdfjs/pdf.worker.min.js"></script>
   <script src="../vendor/pdfjs/pdf.min.js"></script>
   <script src="../lib/latex-highlight.js"></script>
+  <script src="../lib/compile-check.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

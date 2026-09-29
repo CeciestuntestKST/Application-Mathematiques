@@ -10,8 +10,8 @@ Référentiel des fonctionnalités : **À faire** (priorisé P1→P5), **Idée**
 - [ ] **Mode révision — masquage des démonstrations** : bascule globale « afficher / masquer toutes les démonstrations » (onglets notions, fiches compactes des plans/développements) pour s'auto-tester avant l'oral ; état persisté.
 - [ ] **Tirage aléatoire de notions** : bouton « Une notion au hasard » filtré par matière / nature / leçon d'oral, pour l'entraînement de mémoire type oral ; ouvre la notion tirée dans un onglet.
 - [ ] **Favoris / notions à revoir** : épingler des notions (stockage dans les préférences, jamais dans les `.tex`), filtre « Favoris » dans la sidebar Notions, badge épinglé sur les cartes, compteur.
-- [ ] **Raccourcis clavier globaux** : `Ctrl+F` focus recherche, `Ctrl+W` fermer l'onglet actif, `Ctrl+Tab` / `Ctrl+Maj+Tab` onglet suivant/précédent, `F11` plein écran, `Échap` retour accueil de section ; affichés dans les info-bulles des boutons concernés.
-- [ ] **Test de compilation d'une notion** : vérifier qu'une notion compile seule (export `.tex` autonome d'une notion + détection des macros manquantes — comparer les `\macro` du corps à celles définies dans `settings.tex`) ; signale les problèmes **avant** l'oral.
+
+
 
 ### P2 — Confort quotidien
 
@@ -54,6 +54,9 @@ Référentiel des fonctionnalités : **À faire** (priorisé P1→P5), **Idée**
 - Mode « tableau noir » pour réviser : notions affichées une par une en très grand format.
 
 ## Fait (v0.2.x — pour mémoire)
+
+- [x] **Raccourcis clavier globaux** : `Ctrl+F` focus recherche de la section active (Notions, Cours/PDF, Oral, Plans, Développements), `Ctrl+W` fermer l'onglet de notion actif, `Ctrl+Tab` / `Ctrl+Maj+Tab` onglet de notion suivant/précédent, `F11` plein écran (IPC `app:toggle-fullscreen`), `Échap` retour à l'accueil de la section courante (vue détail leçons/développements/oral) ; raccourcis affichés dans les info-bulles et placeholders des champs de recherche.
+- [x] **Test de compilation d'une notion** : bouton **« Vérifier »** dans l'onglet d'une notion — `lib/compile-check.js` (Node pur, testé) extrait les `\macro` et environnements du corps (commentaires ignorés), les compare aux définitions du `settings.tex` et aux commandes standard LaTeX/KaTeX ; affiche « ✓ Compile seule » ou la liste des macros/environnements manquants — pour repérer les problèmes **avant** l'oral.
 
 - [x] **Thème clair / sombre commutable** : bouton « Thème » en bas de la barre latérale — bascule instantanée via `html[data-theme="light"]` (jeu complet de variables CSS claires, code couleur des natures et couleurs de tokens adaptés), préférence persistée via IPC génériques `app:get-pref` / `app:set-pref`.
 - [x] **Coloration syntaxique** du code source des notions **et en direct dans les éditeurs Plans / Développements** (surligneur derrière textarea transparent, synchronisation saisie + défilement, insertion au curseur incluse) : tokenizer `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements, accolades, mode math, spéciaux ; couleurs `--tok-*` adaptées aux deux thèmes.

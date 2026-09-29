@@ -5,6 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('api', {
   getState: () => ipcRenderer.invoke('app:get-state'),
   getVersion: () => ipcRenderer.invoke('app:get-version'),
+  toggleFullscreen: () => ipcRenderer.invoke('app:toggle-fullscreen'),
   getPref: (key) => ipcRenderer.invoke('app:get-pref', key),
   setPref: (patch) => ipcRenderer.invoke('app:set-pref', patch),
   selectFolder: () => ipcRenderer.invoke('app:select-folder'),

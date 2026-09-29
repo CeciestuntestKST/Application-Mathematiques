@@ -172,6 +172,14 @@ ipcMain.handle('app:select-folder', async () => {
 
 ipcMain.handle('app:get-version', () => app.getVersion());
 
+ipcMain.handle('app:toggle-fullscreen', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.setFullScreen(!mainWindow.isFullScreen());
+    return { fullscreen: mainWindow.isFullScreen() };
+  }
+  return { error: 'no-window' };
+});
+
 ipcMain.handle('app:get-pref', (_event, key) => {
   if (typeof key !== 'string' || !key) {
     return null;
