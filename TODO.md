@@ -17,7 +17,6 @@ Référentiel des fonctionnalités : **À faire** (priorisé P1→P5), **Idée**
 
 - [ ] **Marque-pages / reprise de lecture PDF** : mémoriser la dernière page consultée de chaque cours (préférences), proposition de reprise à la réouverture ; indicateur de progression dans la liste des cours.
 - [ ] **Historique de navigation des notions** : boutons précédent / suivant façon navigateur (pile des notions ouvertes), `Alt+←` / `Alt+→`.
-- [ ] **Restauration de session** : réouvrir au démarrage les onglets de notions et la section qui étaient ouverts à la fermeture (préférences).
 - [ ] **Synchronisation notion ↔ PDF** : bouton « voir dans le cours » depuis une notion — ouvre le PDF correspondant à la bonne page (titre cherché dans la couche texte du PDF ; `.synctex.gz` exploitables en complément).
 - [ ] **Statistiques de révision** : compteur de vues par notion (préférences), badge « souvent revue » sur les cartes, tri « les moins vues d'abord » pour cibler les révisions.
 - [ ] **Surlignage persistant des PDF** : annotations colorées par page (palette de couleurs, suppression), stockées en JSON dans les préférences — jamais dans le PDF.
@@ -54,6 +53,7 @@ Référentiel des fonctionnalités : **À faire** (priorisé P1→P5), **Idée**
 - Mode « tableau noir » pour réviser : notions affichées une par une en très grand format.
 
 ## Fait (v0.2.x — pour mémoire)
+- [x] **Restauration de session** : réouvrir au démarrage les onglets de notions et la section qui étaient ouverts à la fermeture — préférence `session` (`section`, `openNotionIds`, `activeNotionId`) sauvegardée via `app:set-pref` à chaque changement de section ou d’onglets, restaurée dans `init()` après le scan du dossier (les notions disparues du dossier sont ignorées, onglet actif préservé).
 
 - [x] **Raccourcis clavier globaux** : `Ctrl+F` focus recherche de la section active (Notions, Cours/PDF, Oral, Plans, Développements), `Ctrl+W` fermer l'onglet de notion actif, `Ctrl+Tab` / `Ctrl+Maj+Tab` onglet de notion suivant/précédent, `F11` plein écran (IPC `app:toggle-fullscreen`), `Échap` retour à l'accueil de la section courante (vue détail leçons/développements/oral) ; raccourcis affichés dans les info-bulles et placeholders des champs de recherche.
 - [x] **Test de compilation d'une notion** : bouton **« Vérifier »** dans l'onglet d'une notion — `lib/compile-check.js` (Node pur, testé) extrait les `\macro` et environnements du corps (commentaires ignorés), les compare aux définitions du `settings.tex` et aux commandes standard LaTeX/KaTeX ; affiche « ✓ Compile seule » ou la liste des macros/environnements manquants — pour repérer les problèmes **avant** l'oral. Filtre **« Problème de compilation »** en fin de barre latérale des filtres (Toutes / Avec problème / Sans problème). Distingue les environnements de mode math (`aligned`, `pmatrix`… acceptés dans `$…$`) des environnements de texte (`tikzpicture` hors mode math) pour éviter faux positifs et faux négatifs.

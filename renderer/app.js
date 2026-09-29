@@ -930,6 +930,22 @@
     state.notionsListRendered = 200;
   }
 
+  async function saveSessionPref() {
+    if (state.restoringSession) {
+      return;
+    }
+    try {
+      await window.api.setPref({
+        session: {
+          section: state.section,
+          openNotionIds: state.openNotions.map((n) => n.id),
+          activeNotionId: state.activeNotionId
+        }
+      });
+    } catch (err) {
+      console.error('impossible de sauvegarder la session:', err);
+    }
+  }
   function switchSection(section) {
     state.section = section;
     for (const btn of els.activityIcons) {
@@ -962,6 +978,7 @@
       updateDevsView();
     }
     updateMainView();
+    saveSessionPref();
   }
 
   async function refreshOralData() {
@@ -1913,6 +1930,7 @@
   function renderNotionTabs() {
     clearElement(els.notionTabs);
     show(els.notionTabs, state.openNotions.length > 0);
+    saveSessionPref();
     if (state.openNotions.length === 0) {
       return;
     }
@@ -4336,11 +4354,30 @@
   }
 
   async function init() {
+    state.restoringSession = true;
     const stateResult = await window.api.getState();
     if (stateResult.prefsError) {
       console.error('prefsError:', stateResult.prefsError);
     }
     await initTheme();
+    let savedSession = null;
+    try {
+      savedSession = await window.api.getPref('session');
+    } catch (err) {
+      console.error('impossible de lire la session sauvegard\u00e9e:', err);
+    }
+    if (savedSession && typeof savedSession === 'object'
+      && ['cours', 'notions', 'lecons', 'oral', 'developpements'].includes(savedSession.section)) {
+      state.section = savedSession.section;
+      for (const btn of els.activityIcons) {
+        btn.classList.toggle('active', btn.dataset.section === state.section);
+      }
+      show(els.coursList, state.section === 'cours');
+      show(els.notionsFiltersList, state.section === 'notions');
+      show(els.leconsList, state.section === 'lecons');
+      show(els.oralList, state.section === 'oral');
+      show(els.devsList, state.section === 'developpements');
+    }
     if (stateResult.folder) {
       els.folderDisplay.textContent = stateResult.folder;
       els.folderDisplay.title = stateResult.folder;
@@ -4357,6 +4394,22 @@
     await loadOralLessons();
     renderOralSidebar();
     updateOralView();
+    if (savedSession && Array.isArray(savedSession.openNotionIds)) {
+      const restored = savedSession.openNotionIds
+        .map((id) => state.notions.find((n) => n.id === id))
+        .filter((n) => n);
+      if (restored.length > 0) {
+        state.openNotions = restored;
+        state.activeNotionId = restored.some((n) => n.id === savedSession.activeNotionId)
+          ? savedSession.activeNotionId
+          : restored[restored.length - 1].id;
+        renderNotionTabs();
+        renderNotionViews();
+        updateNotionCardStates();
+      }
+    }
+    state.restoringSession = false;
+    await saveSessionPref();
   }
 
   function focusSectionSearch() {
