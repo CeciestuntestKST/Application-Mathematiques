@@ -136,6 +136,7 @@
     notionTitleFilter: 'all',
     notionCourseExcluded: new Set(),
     notionEnvExcluded: new Set(),
+    notionCompileFilter: 'all',
     notionsListRendered: 0,
     lessons: [],
     activeLessonId: null,
@@ -633,10 +634,27 @@
     return -1;
   }
 
+  const notionCompileCache = new Map();
+
+  function notionHasCompileIssue(notion) {
+    const key = notion.id + ':' + notion.body.length;
+    if (notionCompileCache.has(key)) {
+      return notionCompileCache.get(key);
+    }
+    const settings = state.scan && state.scan.settings
+      ? { macros: state.scan.settings.macros, environments: state.scan.settings.environments }
+      : { macros: [], environments: [] };
+    const result = window.compileCheck.checkNotionCompiles(notion.body, settings);
+    const hasIssue = !result.ok;
+    notionCompileCache.set(key, hasIssue);
+    return hasIssue;
+  }
+
   function getFilteredNotions() {
     const q = fold(state.notionFilter);
     const titleFilter = state.notionTitleFilter;
     const excluded = state.notionCourseExcluded;
+    const compileFilter = state.notionCompileFilter;
     const matched = state.notions.filter((notion) => {
       if (titleFilter === 'titled' && !notion.hasTitle) {
         return false;
@@ -648,6 +666,12 @@
         return false;
       }
       if (state.notionEnvExcluded.size > 0 && state.notionEnvExcluded.has(notion.environment)) {
+        return false;
+      }
+      if (compileFilter === 'issues' && !notionHasCompileIssue(notion)) {
+        return false;
+      }
+      if (compileFilter === 'clean' && notionHasCompileIssue(notion)) {
         return false;
       }
       if (!q) {
@@ -799,6 +823,20 @@
         );
       }
     }
+
+    const compileLabels = [
+      { value: 'all', label: 'Toutes' },
+      { value: 'issues', label: 'Avec probl\u00e8me' },
+      { value: 'clean', label: 'Sans probl\u00e8me' }
+    ];
+    els.notionsFiltersList.appendChild(buildGroupHeader('Probl\u00e8me de compilation', undefined));
+    els.notionsFiltersList.appendChild(
+      buildFilterSelect(state.notionCompileFilter, compileLabels, (value) => {
+        state.notionCompileFilter = value;
+        resetNotionsGridPagination();
+        renderNotionsGrid();
+      })
+    );
   }
 
   function buildNotionCard(notion) {
@@ -972,6 +1010,7 @@
     state.notions = Array.isArray(result.notions) ? result.notions : [];
     latexRenderCache.clear();
     notionViewCache.clear();
+    notionCompileCache.clear();
 
     if (opts.preserve) {
       const stillExists = (id) => state.notions.some((n) => n.id === id);
@@ -1002,6 +1041,7 @@
       state.activeNotionId = null;
       state.notionCourseExcluded = new Set();
       state.notionEnvExcluded = new Set();
+      state.notionCompileFilter = 'all';
       resetPdfViewer();
       show(els.pdfToolbar, false);
       show(els.pdfContainer, false);

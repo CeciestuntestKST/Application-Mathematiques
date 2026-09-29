@@ -881,6 +881,42 @@ test('checkNotionCompiles : ignore les commentaires et les commandes standard', 
   assert.strictEqual(result.ok, true);
 });
 
+test('checkNotionCompiles : accepte les environnements math en mode math', () => {
+  const settings = { macros: [], environments: [] };
+  const body = [
+    '$\\ker f \\cong g$ et',
+    '$\\begin{aligned}',
+  'a &= b \\\\\\',
+  '\\end{aligned}$'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, true);
+  assert.deepStrictEqual(result.missingEnvironments, []);
+});
+
+test('checkNotionCompiles : signale tikzpicture utilis\u00e9 en mode math', () => {
+  const settings = { macros: [], environments: [] };
+  const body = [
+    '$\\begin{tikzpicture}',
+    '\\draw (0,0) -- (1,1);',
+    '\\end{tikzpicture}$'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, false);
+  assert.ok(result.missingEnvironments.includes('tikzpicture'));
+});
+
+test('checkNotionCompiles : accepte tikzpicture hors mode math', () => {
+  const settings = { macros: [], environments: [] };
+  const body = [
+    '\\begin{tikzpicture}',
+    '\\draw (0,0) -- (1,1);',
+    '\\end{tikzpicture}'
+  ].join('\n');
+  const result = compileCheck.checkNotionCompiles(body, settings);
+  assert.strictEqual(result.ok, true);
+});
+
 /* ---------- oral-files ---------- */
 
 test('normalizeOralLesson exige un num\u00e9ro entier positif et un titre', () => {
