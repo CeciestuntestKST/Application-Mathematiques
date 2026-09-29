@@ -14,17 +14,17 @@ npm test         # tests unitaires de la logique LaTeX (Node, sans Electron)
 
 ## Feuille de route
 
-Le détail de ce qui est **fait**, **à faire** et **reporté** est maintenu dans [`TODO.md`](TODO.md). État en un coup d'œil (v0.2.2) :
+Le TODO complet — **à faire en premier** (priorités P1→P5), idées et historique du livré — est maintenu dans [`TODO.md`](TODO.md). État en un coup d'œil (v0.2.2) :
 
-| Priorité | Fait | Restant |
+| Priorité | Contenu | Items |
 |---|---|---|
-| 1 — Cœur « préparation agrégation » | 20 | 0 (+3 reportés) |
-| 2 — Confort quotidien | 0 | 4 |
-| 3 — Section Cours (PDF) | 1 | 2 |
-| 4 — Graphisme / polish | 0 | 3 (+2 idées) |
-| 5 — Technique | 0 | 2 |
+| **P1** | Essentiel pour la préparation de l'oral : minuteur d'oral blanc, mode révision (masquer les démos), tirage aléatoire, favoris, raccourcis clavier, test de compilation | 6 |
+| **P2** | Confort quotidien : marque-pages/reprise PDF, historique de navigation, restauration de session, synchro notion↔PDF, statistiques, surlignage PDF, recherche globale | 7 |
+| **P3** | Rédaction : modèles de plan, temps de lecture estimé, duplication, statistiques de couverture, import `.tex` externe | 5 |
+| **P4** | Interface : taille de police du rendu, épinglage d'onglets, fiche plein écran imprimable, zoom global, animations | 5 |
+| **P5** | Technique : multi-dossiers, sauvegarde/export des données, intégrité au démarrage, CI de tests | 4 |
 
-Livrées à ce jour : sections **Cours** (lecteur PDF pdf.js embarqué, recherche texte), **Notions** (extraction/fusion/recherche plein texte), **Oral** (registre des numéros de leçon, aperçus intégrés des plans et développements en fiches compactes), **Plans** et **Développements** (éditeurs LaTeX avec bibliothèque de notions, **export `.tex` autonome compilable**), rechargement automatique du dossier, mise à jour automatique de l'app.
+Livrées à ce jour : sections **Cours** (lecteur PDF pdf.js embarqué, recherche texte), **Notions** (extraction/fusion/recherche plein texte), **Oral** (registre des numéros de leçon, aperçus intégrés des plans et développements en fiches compactes), **Plans** et **Développements** (éditeurs LaTeX avec coloration syntaxique en direct, bibliothèque de notions, **export `.tex` autonome compilable**), **thème clair/sombre**, rechargement automatique du dossier, mise à jour automatique de l'app.
 
 ## Organisation du dossier de cours
 

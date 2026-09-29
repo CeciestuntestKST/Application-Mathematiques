@@ -1,107 +1,78 @@
 # TODO — Feuille de route de l'application
 
-Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (priorisé), **Plus tard** (retenu mais retardé), **Fait** (livré), **Idée** (piste non priorisée). Cochez en modifiant directement ce fichier quand une fonctionnalité est livrée.
+Référentiel des fonctionnalités : **À faire** (priorisé P1→P5), **Idée** (piste non priorisée), **Fait** (livré, en fin de fichier pour mémoire).
 
-## État en un coup d'œil (v0.2.2)
+## À faire
 
-| Priorité | Fait | Restant |
-|---|---|---|
-| 1 — Cœur « préparation agrégation » | 20 | 0 (+3 reportés) |
-| 2 — Confort quotidien | 0 | 4 |
-| 3 — Section Cours (PDF) | 1 | 2 |
-| 4 — Graphisme / polish | 2 | 1 (+2 idées) |
-| 5 — Technique | 0 | 2 |
-| Déjà livré (pour mémoire) | 12 | — |
-| **Total** | **35** | **9 (+5 reportés/idées)** |
+### P1 — Essentiel pour la préparation de l'oral (à faire en premier)
 
-**Priorité 1 terminée.** Prochaines étapes possibles : raccourcis clavier globaux (priorité 2), surlignage persistant des PDF (priorité 3).
+- [ ] **Minuteur d'oral blanc** : chronomètre configurable (préparation X min / passage Y min) dans la vue détail d'un numéro de leçon de la section Oral ; alerte visuelle au passage préparation→exposé ; persisté dans les préférences.
+- [ ] **Mode révision — masquage des démonstrations** : bascule globale « afficher / masquer toutes les démonstrations » (onglets notions, fiches compactes des plans/développements) pour s'auto-tester avant l'oral ; état persisté.
+- [ ] **Tirage aléatoire de notions** : bouton « Une notion au hasard » filtré par matière / nature / leçon d'oral, pour l'entraînement de mémoire type oral ; ouvre la notion tirée dans un onglet.
+- [ ] **Favoris / notions à revoir** : épingler des notions (stockage dans les préférences, jamais dans les `.tex`), filtre « Favoris » dans la sidebar Notions, badge épinglé sur les cartes, compteur.
+- [ ] **Raccourcis clavier globaux** : `Ctrl+F` focus recherche, `Ctrl+W` fermer l'onglet actif, `Ctrl+Tab` / `Ctrl+Maj+Tab` onglet suivant/précédent, `F11` plein écran, `Échap` retour accueil de section ; affichés dans les info-bulles des boutons concernés.
+- [ ] **Test de compilation d'une notion** : vérifier qu'une notion compile seule (export `.tex` autonome d'une notion + détection des macros manquantes — comparer les `\macro` du corps à celles définies dans `settings.tex`) ; signale les problèmes **avant** l'oral.
 
-## Priorité 1 — Cœur « préparation agrégation »
+### P2 — Confort quotidien
 
-### Fait
-- [x] **Leçons d'oral — compilation autonome** : bouton **« Exporter .tex »** dans la toolbar de l'éditeur de plans — génère un `.tex` **autonome compilable** (documentclass + préambule repris du `settings.tex` du dossier de cours, ou préambule de repli s'il n'existe pas) autour du plan actuel de la leçon, via une boîte de dialogue native de sauvegarde ; les lignes de métadonnées `% lesson-meta:` sont retirées, le contenu est sauvegardé avant l'export.
-- [x] **Développements — compilation autonome** : bouton **« Exporter .tex »** dans la toolbar de l'éditeur de développements — même principe que pour les leçons (préambule du `settings.tex`, métadonnées `% dev-meta:` retirées, titre échappé) ; `lib/tex-export.js` (Node pur, testé).
-- [x] **Dialogues applicatifs maison (correctif Renommer/Retirer/Supprimer)** : `window.prompt` / `window.confirm` ne fonctionnent pas dans Electron (boîtes silencieusement ignorées — le renommage des leçons et les suppressions ne faisaient rien). Remplacés par un dialogue maison intégré au thème : `showAppDialog()` (mode prompt avec champ prérempli, ou confirm), boutons Enregistrer/Retirer/Supprimer, validation par Entrée, annulation par Échap ou Annuler. Appliqué au renommage/retrait des leçons de l'oral (menu ⋯) et aux suppressions de plans et de développements.
-- [x] **Fiches compactes généralisées à tous les aperçus** : dans les aperçus des éditeurs **Plans** et **Développements**, les noms des notions ne sont plus affichés — les blocs adoptent le même rendu compact que la section Oral (« ‹Type› : ‹corps› » en un seul flux dense, sans badge ni titre) ; l'aperçu de l'éditeur Plans ressemble ainsi d'avantage à l'aperçu du bloc de plan de la section Oral.
-- [x] **Oral — blocs notions compacts et anti-troncature dans les aperçus** : dans les aperçus intégrés (plans et développements) de la section Oral, badge et titre des blocs notions sont supprimés ; le type de la notion ouvre directement le corps en un seul flux « ‹Type› : ‹corps› » très dense. Correctif racine de la troncature : les vues de rendu sont des conteneurs flex en colonne dont les enfants rétrécissaient verticalement (`flex-shrink` par défaut) — désormais `flex-shrink: 0` (le conteneur scrolle, tout est déplié, le texte libre n'a plus de zone déroulante interne) ; les formules larges défilent horizontalement en local (`overflow-x: auto` + `text-align: safe center`). Les aperçus des sections Plans et Développements utilisent désormais la même fiche compacte (badge et nom de notion supprimés, « ‹Type› : ‹corps› » en un seul flux dense) — le panneau Devs reçoit aussi le correctif anti-troncature (`flex-shrink: 0`).
-- [x] **Oral — aperçu intégré des développements** : dans la vue détail d'un numéro, un clic sur un développement potentiel ouvre **son aperçu directement dans le panneau droit de la section Oral** (rendu fiche compact ; **sans sommaire** — il n'y en a jamais dans les développements) au lieu de basculer vers la section Développements ; boutons **flèche retour** (revenir à la liste) et **crayon** (ouvrir l'élément dans son éditeur) en icônes SVG sur les deux panneaux (plans et développements).
-- [x] **Ergonomie — recherches, menus ⋯ et flèches retour stylées** : champ de recherche dans la section **Oral** (filtre cartes et liste latérale « Numéros de leçons » par numéro ou titre), dans **Plans** (par numéro de leçon) et dans **Développements** (par numéro de leçon ou par titre) ; petit menu **⋯** en haut à droite de chaque carte Oral (Renommer / Retirer, à la place des contrôles de la toolbar de détail, qui affiche désormais le titre en simple libellé) ; la section « Leçons d'oral » est renommée **« Plans »** ; flèches de retour stylées (`.back-btn`, icône SVG) dans toutes les sections créées.
+- [ ] **Marque-pages / reprise de lecture PDF** : mémoriser la dernière page consultée de chaque cours (préférences), proposition de reprise à la réouverture ; indicateur de progression dans la liste des cours.
+- [ ] **Historique de navigation des notions** : boutons précédent / suivant façon navigateur (pile des notions ouvertes), `Alt+←` / `Alt+→`.
+- [ ] **Restauration de session** : réouvrir au démarrage les onglets de notions et la section qui étaient ouverts à la fermeture (préférences).
+- [ ] **Synchronisation notion ↔ PDF** : bouton « voir dans le cours » depuis une notion — ouvre le PDF correspondant à la bonne page (titre cherché dans la couche texte du PDF ; `.synctex.gz` exploitables en complément).
+- [ ] **Statistiques de révision** : compteur de vues par notion (préférences), badge « souvent revue » sur les cartes, tri « les moins vues d'abord » pour cibler les révisions.
+- [ ] **Surlignage persistant des PDF** : annotations colorées par page (palette de couleurs, suppression), stockées en JSON dans les préférences — jamais dans le PDF.
+- [ ] **Recherche globale** (`Ctrl+Shift+F`) : chercher un terme sur **toutes** les sections à la fois (notions, plans, développements, titres de leçons) avec résultats groupés par section.
 
-- [x] **Aperçus « dans l'ordre du document »** : les aperçus rendus des leçons, développements et plans (section Oral) affichent désormais les titres `\chapter` / `\section` / `\subsection` / `\subsubsection` et le **texte libre entre les blocs** (pas seulement les environnements reconnus) — flux ordonné construit côté main (`outline` de l'IPC `app:dev-parse`, positions des notions/sections dans `lib/latex-notions.js`). Mini-sommaire sous chaque plan de la liste de la section Oral.
+### P3 — Rédaction des plans et développements
 
-- [x] **Oral — titres des leçons modifiables et sommaires des plans** : le titre officiel d'un numéro est modifiable dans la vue détail (saisir un titre sur un numéro non déclaré l'enregistre au registre) ; clic sur un plan → **aperçu intégré dans la section Oral** (sommaire extrait des `\chapter` / `\section` / `\subsection` / `\subsubsection` — variantes étoilées et argument optionnel pris en charge — suivi du rendu fiche compact type notions), bouton **« Ouvrir dans Leçons »** pour basculer vers l'éditeur ; le parseur (`extractSections`, `lib/latex-notions.js`) alimente aussi l'IPC `app:dev-parse`.
+- [ ] **Modèles de plan** : à la création d'un plan, partir d'un squelette (intro / développement / conclusion, `\chapter`/`\section` prêts) ou d'un plan existant comme modèle ; modèles par défaut + « enregistrer comme modèle ».
+- [ ] **Compteur de temps de lecture estimé** : longueur du plan (mots / formules) → estimation « ≈ X min d'exposé », affichée dans la toolbar de l'éditeur Plans ; seuil d'alerte par rapport au temps d'oral réglementaire.
+- [ ] **Dupliquer un plan / un développement** : bouton sur les cartes d'accueil — copie complète (contenu + métadonnées) avec titre « copie de … » ; utile pour décliner un plan par niveau de détail.
+- [ ] **Statistiques des numéros de leçon** : dans la section Oral, indicateurs de couverture — numéros sans plan rédigé, numéros sans développement, tri par « à travailler en priorité ».
+- [ ] **Import de `.tex` externe** : importer un plan/développement rédigé ailleurs (boîte de dialogue native) → création dans `lecons/` ou `developpements/` avec métadonnées propres à l'app.
 
-- [x] **Section « Oral » (registre des numéros de leçon)** : troisième section de l'app — chaque numéro officiel (numéro unique + titre, « + Ajouter une leçon ») est affiché en carte avec le nombre de plans rédigés et le nombre de développements associés ; les numéros utilisés par des plans ou des développements apparaissent automatiquement (titre « Sans titre » s'ils ne sont pas déclarés) ; clic sur un numéro → vue détail : plans rédigés à gauche (aperçu intégré, bouton crayon pour l'éditer dans la section Plans), développements potentiels à droite (aperçu intégré, bouton crayon pour l'éditer dans la section Développements) ; la création de plans se fait uniquement dans la section Plans ; titre modifiable, « Retirer » retire le numéro du registre sans supprimer les plans ni les développements ; registre stocké dans `oral/lessons.json` (`lib/oral-files.js`, Node pur, testé).
+### P4 — Interface / polish
 
-- [x] **Leçons d'oral — création à numéro seul** : le formulaire de création ne demande plus que le numéro de leçon (plus de titre) ; plusieurs plans peuvent exister pour un même numéro, chaque nouveau plan reçoit un titre auto « Plan N » (modifiable ensuite dans l'éditeur).
+- [ ] **Personnalisation de la taille de police du rendu** (KaTeX et code) : réglage + / − dans la toolbar des notions, persisté ; utile pour la projection ou le confort visuel.
+- [ ] **Épinglage d'onglets de notions** : épingler les notions clés (restent en tête de rangée, protégées de « fermer tous »).
+- [ ] **Aperçu compact plein écran d'une leçon** : mode « fiche de révision » imprimable (rendu fiche compact existant, sans chrome d'application) — impression ou capture avant l'oral.
+- [ ] **Zoom global de l'interface** : `Ctrl+plus` / `Ctrl+moins` (taille de police racine), persisté.
+- [ ] **Animations de transition** légères entre sections et vues (fondu discret) pour la fluidité perçue.
 
-- [x] **Leçons d'oral — aperçu compact « fiche »** : l'aperçu rendu des leçons adopte une présentation dense (interlignes et marges réduits, en-têtes et corps plus serrés, démonstrations compactes) pour tenir sur une fiche de révision ; la vue « Développements » garde son rendu standard.
+### P5 — Technique / robustesse
 
-- [x] **Leçons d'oral — aperçu rendu** : prévisualisation KaTeX du plan dans l'éditeur — bascule « Code source » / « Aperçu rendu » ; le rendu décompose le plan en blocs type notions (démonstrations pliables), comme pour les développements ; à la création d'une leçon, l'éditeur s'ouvre directement en mode code ; l'import d'une notion bascule en mode code pour l'insertion au curseur.
-
-- [x] **Leçons / Développements — sections indépendantes** : entrer dans une section affiche toujours son accueil (plus de reprise du dernier élément édité, qui donnait l'impression que la vue principale ne changeait pas) ; correctif de l'aperçu rendu des développements (la vue restait figée : la fonction n'attendait pas le parsing IPC) ; garde-fous contre les rendus asynchrones obsolètes (bascule rapide entre sections).
-
-- [x] **Développements — numéros de leçons libres** : champ « N° de leçons » (ex. `12, 142, 158`) dans le panneau latéral, stocké dans `% dev-meta:` (`lessonNumbers`), en plus des cases à cocher de leçons existantes. Les cartes de l'accueil affichent les numéros concernés.
-
-- [x] **Développements — aperçu rendu type notions** : l'éditeur affiche par défaut le contenu décomposé en blocs (théorèmes, exercices, énoncés) rendus par KaTeX, avec **démonstrations pliables/dépliables** comme dans la section Notions ; bascule « Code source » / « Aperçu rendu » pour éditer le LaTeX ; parse via IPC `app:dev-parse` (couples démonstrations ↔ notion précédente ou de même nom).
-
-- [x] **Développements — section complète** : section dédiée aux développements potentiels pour l'oral ; création depuis l'accueil (« + Créer un développement » → titre) ; **éditeur LaTeX libre** avec autosauvegarde dans un petit fichier `.tex` du sous-dossier `developpements/` du dossier de cours (métadonnées `% dev-meta:` titre/leçons compatibles en en-tête) ; **« Leçons compatibles »** : cases à cocher listant les leçons d'oral (lien par identifiant stable, insensible au renommage du fichier) ; **panneau « Bibliothèque de notions »** avec recherche et insertion du LaTeX au clic ; cartes à l'accueil (titre, leçons, date) ; titre modifiable avec renommage automatique du fichier ; suppression avec confirmation ; le dossier `developpements/` est exclu du scan des notions et du watcher ; `lib/dev-files.js` (Node pur) ; 49 tests au total.
-
-- [x] **Leçons d'oral — identifiant stable** : chaque leçon porte un identifiant dérivé du couple numéro/titre (`lesson-…`), stocké dans les métadonnées `% lesson-meta:` — il survit au renommage du fichier et sert de lien pour les leçons compatibles des développements.
-
-- [x] **Leçons d'oral — section complète (autonome)** : création depuis la section dédiée (« + Créer une leçon » → numéro + titre) ; **éditeur LaTeX libre** avec autosauvegarde dans un petit fichier `.tex` du sous-dossier `lecons/` du dossier de cours (métadonnées `% lesson-meta:` numéro/titre en en-tête) ; **panneau latéral « Bibliothèque de notions »** avec recherche plein texte — clic sur une notion = insertion de son code LaTeX au curseur ; cartes de leçons à l'accueil (numéro, titre, date) ; titre/numéro modifiables avec renommage automatique du fichier ; suppression avec confirmation ; le dossier `lecons/` est exclu du scan des notions et du watcher ; `lib/lesson-files.js` (Node pur). La section Notions reste inchangée (le mode cochage temporaire a été retiré).
-
-- [x] **Recherche dans le corps des notions** : la recherche porte sur titre / nature / matière / corps (y compris démonstrations), avec priorité aux titres concordants (tri par pertinence : titre, puis nature, puis matière, puis corps ; cartes à titre concordant surlignées).
-
-### Plus tard (explicitement reportés)
-
-- [ ] **Favoris / notions à revoir** : épingler des notions (stockage dans les préférences, jamais dans les `.tex`), filtre « Favoris » et compteur.
-- [ ] **Mode révision** : bascule globale « afficher / masquer toutes les démonstrations » pour s'auto-tester.
-- [ ] **Tirage aléatoire** : « une notion au hasard » filtrée par matière / nature, pour l'entraînement de mémoire type oral.
-
-## Priorité 2 — Confort quotidien
-
-- [ ] **Raccourcis clavier globaux** : `Ctrl+F` focus recherche, `Ctrl+W` fermer l'onglet, `Ctrl+Tab` onglet suivant, `F11` plein écran lecture. *(Naviguer entre les onglets et les fermer se fait aujourd'hui uniquement à la souris ; seule la recherche PDF a des raccourcis locaux : Entrée / Maj+Entrée / Échap.)*
-- [ ] **Historique de navigation** dans les notions : précédent / suivant façon navigateur quand on saute de notion en notion.
-- [ ] **Restauration de session** : réouvrir au démarrage les onglets de notions qui étaient ouverts à la fermeture.
-- [ ] **Synchronisation notion ↔ PDF** : bouton « voir dans le cours » depuis une notion, ouvrant le PDF correspondant à la bonne page (via le titre cherché dans la couche texte du PDF ; les `.synctex.gz` du dossier sont aussi exploitables).
-
-## Priorité 3 — Section Cours (PDF)
-
-- [ ] **Surlignage persistant** : annotations colorées par page, stockées en JSON dans les préférences (jamais dans le PDF), avec palette de couleurs et suppression.
-- [x] **Recherche texte dans les PDF** : champ de recherche dans la toolbar du lecteur, insensible à la casse et aux accents, surlignage des occurrences (courante en jaune, autres en orange), navigation Occurrence précédente/suivante (▲▼ ou Entrée / Maj+Entrée), compteur, Échap ou × pour effacer.
-- [ ] **Marque-pages / reprise de lecture** : mémoriser la dernière page consultée de chaque cours et la proposer à la réouverture.
-
-## Priorité 4 — Graphisme / polish
-
-### Fait
-- [x] **Thème clair / sombre commutable** : bouton « Thème » en bas de la barre latérale — bascule instantanée via `html[data-theme="light"]` (jeu complet de variables CSS claires, code couleur des natures de notions et couleurs de tokens adaptés), préférence persistée dans `prefs.json` via les IPC génériques `app:get-pref` / `app:set-pref`.
-- [x] **Coloration syntaxique** du code source déroulé (bascule « Code source » des notions) **et des éditeurs de code des sections Plans et Développements** (coloration en direct pendant la frappe : `<pre>` surligneur derrière le `textarea` transparent, synchronisation saisie + défilement, rafraîchi aussi à l'insertion d'une notion au curseur) : tokenizer LaTeX `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements `\begin{...}`/`\end{...}`, accolades, mode math `$...$`, caractères spéciaux ; couleurs adaptées aux deux thèmes via variables `--tok-*`.
-
-### À faire
-- [ ] **Statistiques de révision** : compteur de vues par notion, badge « souvent revue ».
+- [ ] **Multi-dossiers de cours** : plusieurs racines (ex. L3/M1/M2 **et** dossier agrégation) avec bascule rapide depuis la sidebar ; liste des racines dans les préférences.
+- [ ] **Sauvegarde / export des données de l'app** : exporter toutes les préférences (favoris, thèmes, marque-pages, statistiques) en un fichier JSON restaurable — utile en cas de changement de machine.
+- [ ] **Vérification d'intégrité au démarrage** : scan de `oral/lessons.json` et des métadonnées des plans/développements au lancement ; réparation ou signalement des entrées orphelines/incohérentes.
+- [ ] **CI de tests** : workflow GitHub Actions qui lance `npm test` à chaque push/PR — protège contre les régressions du parsing et des fichiers (les 61 tests existants).
 
 ### Idées (non priorisées)
 
 - Variantes de logo (∫ au lieu de Σ, version avec titre).
-- Personnalisation de la taille de police du rendu KaTeX.
+- Coloration syntaxique dans le panneau « Code source » de la section Cours si des `.tex` y deviennent lisibles.
+- Support de l'anglais (interface bilingue) — peu probable avant l'oral.
+- Mode « tableau noir » pour réviser : notions affichées une par une en très grand format.
 
-## Priorité 5 — Technique
+## Fait (v0.2.x — pour mémoire)
 
-- [ ] **Multi-dossiers** : pouvoir ajouter plusieurs racines de cours (ex. L3/M1/M2 et dossier agrégation) et basculer entre elles.
-- [ ] **Test de compilation** : vérifier qu'une notion compile seule en LaTeX (détection des macros manquantes avant l'oral).
-
-## Déjà livré (pour mémoire)
-
-- [x] Lecteur PDF pdf.js embarqué : zoom, ajustement largeur, Ctrl+molette, sommaire interactif avec suivi de lecture, liens cliquables, rendu virtuel.
-- [x] Section Notions : extraction depuis tous les `.tex`, fusion par titre **et nature**, démonstrations couplées et repliées, filtres (nommées/anonymes, matières, natures), code couleur par nature, recherche insensible aux accents/casse.
-- [x] Onglets de notions persistants (cache de rendu), bouton « Code source » avec **Copier** dans le bloc déroulé, bouton **« fermer tous les onglets »** (✕ en fin de rangée d'onglets).
-- [x] **Badge « avec démonstration »** (coche ✓) sur les cartes de notions qui ont une démonstration rattachée.
-- [x] **Rechargement automatique du dossier** (watch) avec préservation du contexte (onglets, filtres, PDF rechargé à la page courante).
-- [x] Logo (livre ouvert + Σ) : SVG source + icônes PNG/ICO pour la fenêtre, l'installateur et l'écran d'accueil.
-- [x] Installateur Windows automatique via GitHub Actions (tag `v*` → release).
-- [x] **Mise à jour automatique** de l'app installée (electron-updater + releases GitHub) : bannière dans le footer de la sidebar, téléchargement en arrière-plan, bouton « Redémarrer » pour installer ; silence en dev et non-packagé ; `latest.yml` attaché à la release.
-- [x] Raccourcis basiques d'app (recherche, navigation dans la grille).
-- [x] **Suite de tests unitaires** (`npm test`) : 61 tests sur le parsing `settings.tex`, l'extraction des notions, le modèle (nommage, preuves, fusion), les fichiers de leçons (`lesson-files.js`), de développements (`dev-files.js`), le registre de l'oral (`oral-files.js`), l'export `.tex` autonome (`tex-export.js`), la coloration syntaxique (`latex-highlight.js`) et le watcher — sans Electron.
-- [x] **Version dans le titre de la fenêtre** : « Application Mathématiques vX.Y.Z », lue dynamiquement depuis `package.json` (aucune mise à jour manuelle à prévoir).
-- [x] **Bannière de mise à jour corrigée** : la fonction `initUpdateBanner` manquante a été implémentée (ReferenceError qui bloquait le renderer) ; bannière en bas de la sidebar — téléchargement avec pourcentage, bouton « Redémarrer » quand la mise à jour est prête, bouton « Réessayer » en cas d'erreur.
+- [x] **Thème clair / sombre commutable** : bouton « Thème » en bas de la barre latérale — bascule instantanée via `html[data-theme="light"]` (jeu complet de variables CSS claires, code couleur des natures et couleurs de tokens adaptés), préférence persistée via IPC génériques `app:get-pref` / `app:set-pref`.
+- [x] **Coloration syntaxique** du code source des notions **et en direct dans les éditeurs Plans / Développements** (surligneur derrière textarea transparent, synchronisation saisie + défilement, insertion au curseur incluse) : tokenizer `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements, accolades, mode math, spéciaux ; couleurs `--tok-*` adaptées aux deux thèmes.
+- [x] **Export `.tex` autonome compilable** des plans et développements : bouton « Exporter .tex » (dialogue natif, préambule du `settings.tex` ou de repli, métadonnées internes retirées, titre échappé) ; `lib/tex-export.js` (Node pur, testé).
+- [x] **Dialogues applicatifs maison** (correctif Renommer/Retirer/Supprimer — `window.prompt`/`confirm` inopérants dans Electron) : `showAppDialog()`, validation Entrée, annulation Échap.
+- [x] **Fiches compactes généralisées** à tous les aperçus (Plans, Développements, Oral) : noms des notions masqués, « ‹Type› : ‹corps› » en un seul flux dense ; correctif anti-troncature (`flex-shrink: 0`, `overflow-x` local).
+- [x] **Oral — aperçus intégrés** : clic sur un plan ou un développement → aperçu dans la section Oral (boutons flèche retour et crayon en icônes SVG).
+- [x] **Ergonomie** : recherches (Oral / Plans / Développements), menu ⋯ sur les cartes Oral, section « Leçons » renommée « Plans », flèches retour stylées.
+- [x] **Aperçus « dans l'ordre du document »** : titres `\chapter`/`\section`/`\subsection`/`\subsubsection` et texte libre entre les blocs ; mini-sommaires sous les plans de la section Oral.
+- [x] **Oral — titres modifiables et registre** : section registre des numéros de leçon (`oral/lessons.json`, Node pur, testé), titres officiels modifiables, « Retirer » sans toucher aux plans/développements.
+- [x] **Plans — section complète** : création à numéro seul (plusieurs plans par numéro, titre auto « Plan N »), éditeur LaTeX avec bibliothèque de notions (insertion au curseur), identifiant stable `% lesson-meta:`, autosauvegarde `lecons/`, renommage auto, suppression confirmée.
+- [x] **Développements — section complète** : éditeur LaTeX, « Leçons compatibles » (cases à cocher + numéros libres `12, 142, 158`), bibliothèque de notions, métadonnées `% dev-meta:`, autosauvegarde `developpements/`.
+- [x] **Recherche dans le corps des notions** : titre / nature / matière / corps (démonstrations incluses), tri par pertinence, cartes à titre concordant encadrées.
+- [x] **Notions — extraction et fusion** : tous les `.tex` du dossier, fusion par titre **et** nature, démonstrations couplées et repliées, filtres (nommées/anonymes, matières, natures), code couleur par nature, recherche insensible accents/casse.
+- [x] **Lecteur PDF pdf.js embarqué** : zoom, ajustement largeur, Ctrl+molette, sommaire interactif avec suivi de lecture, liens cliquables, rendu virtuel.
+- [x] **Recherche texte dans les PDF** : insensible casse/accents, occurrences surlignées (courante jaune, autres orange), navigation ▲▼ / Entrée / Maj+Entrée, compteur.
+- [x] **Onglets de notions persistants** (cache de rendu), bouton « fermer tous », badge « avec démonstration » sur les cartes.
+- [x] **Rechargement automatique du dossier** (watch) avec préservation du contexte (onglets, filtres, PDF à la page courante).
+- [x] **Logo** (livre + Σ) : SVG source + PNG/ICO pour fenêtre, installateur, accueil.
+- [x] **Installateur Windows automatique** (GitHub Actions, tag `v*` → release) et **mise à jour automatique** de l'app installée (electron-updater, bannière « Redémarrer », `latest.yml` joint).
+- [x] **Version dans le titre de la fenêtre**, lue dynamiquement depuis `package.json`.
+- [x] **Suite de tests unitaires** (`npm test`) : 61 tests — parsing `settings.tex`, extraction des notions, modèle (nommage, preuves, fusion), fichiers de leçons/développements, registre oral, export `.tex`, coloration syntaxique, watcher — sans Electron.
