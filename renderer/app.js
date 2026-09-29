@@ -213,8 +213,7 @@
     '\\qedhere': '',
     '\\cho': '\\left\\{\\begin{array}{ll}#1\\end{array}\\right.',
     '\\ssi': '\\text{ si et seulement si }',
-    '\\vvvert': '\\lVert\\!\\lVert\\!\\lVert',
-    '\\mathring': '\\check{#1}'
+    '\\vvvert': '\\lVert\\!\\lVert\\!\\lVert'
   };
 
   function adaptMacroBodyForKatex(name, body) {
