@@ -153,7 +153,10 @@
                 <button id="lesson-view-code" class="dev-mode-btn" title="Basculer entre rendu et code LaTeX">Code source</button>
               </div>
               <div id="lesson-render-view" class="lesson-fiche"></div>
-              <textarea id="lesson-tex-input" class="hidden" spellcheck="false" placeholder="% Plan de la leçon — LaTeX libre&#10;% Importez des notions depuis la bibliothèque à droite…"></textarea>
+              <div id="lesson-code-editor" class="code-editor hidden">
+                <pre id="lesson-code-highlight" class="code-highlight" aria-hidden="true"></pre>
+                <textarea id="lesson-tex-input" spellcheck="false" placeholder="% Plan de la leçon — LaTeX libre&#10;% Importez des notions depuis la bibliothèque à droite…"></textarea>
+              </div>
             </div>
             <div id="lesson-import-pane">
               <div class="lesson-pane-header">Bibliothèque de notions</div>
@@ -200,7 +203,10 @@
                 <button id="dev-view-code" class="dev-mode-btn" title="Basculer entre rendu et code LaTeX">Code source</button>
               </div>
               <div id="dev-render-view"></div>
-              <textarea id="dev-tex-input" class="hidden" spellcheck="false" placeholder="% Développement — LaTeX libre&#10;% Importez des notions depuis la bibliothèque à droite…"></textarea>
+              <div id="dev-code-editor" class="code-editor hidden">
+                <pre id="dev-code-highlight" class="code-highlight" aria-hidden="true"></pre>
+                <textarea id="dev-tex-input" spellcheck="false" placeholder="% Développement — LaTeX libre&#10;% Importez des notions depuis la bibliothèque à droite…"></textarea>
+              </div>
             </div>
             <div id="dev-side-pane">
               <div id="dev-lessons-pane">

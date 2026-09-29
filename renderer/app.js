@@ -92,6 +92,8 @@
     lessonDeleteBtn: document.getElementById('lesson-delete'),
     lessonExportBtn: document.getElementById('lesson-export'),
     lessonTexInput: document.getElementById('lesson-tex-input'),
+    lessonCodeEditor: document.getElementById('lesson-code-editor'),
+    lessonCodeHighlight: document.getElementById('lesson-code-highlight'),
     lessonRenderView: document.getElementById('lesson-render-view'),
     lessonViewCodeBtn: document.getElementById('lesson-view-code'),
     lessonImportSearch: document.getElementById('lesson-import-search'),
@@ -113,6 +115,8 @@
     devDeleteBtn: document.getElementById('dev-delete'),
     devExportBtn: document.getElementById('dev-export'),
     devTexInput: document.getElementById('dev-tex-input'),
+    devCodeEditor: document.getElementById('dev-code-editor'),
+    devCodeHighlight: document.getElementById('dev-code-highlight'),
     devRenderView: document.getElementById('dev-render-view'),
     devViewCodeBtn: document.getElementById('dev-view-code'),
     devLessonsNumbers: document.getElementById('dev-lessons-numbers'),
@@ -2885,12 +2889,21 @@
     els.lessonRenderView.appendChild(frag);
   }
 
+  function updateLessonCodeHighlight() {
+    if (els.lessonCodeHighlight && els.lessonTexInput) {
+      els.lessonCodeHighlight.innerHTML = window.latexHighlight.highlightLatex(els.lessonTexInput.value) + '\n';
+    }
+  }
+
   function updateLessonModeVisibility() {
     if (els.lessonRenderView) {
       show(els.lessonRenderView, !state.lessonShowCode);
     }
-    if (els.lessonTexInput) {
-      show(els.lessonTexInput, state.lessonShowCode);
+    if (els.lessonCodeEditor) {
+      show(els.lessonCodeEditor, state.lessonShowCode);
+      if (state.lessonShowCode) {
+        updateLessonCodeHighlight();
+      }
     }
     if (els.lessonViewCodeBtn) {
       els.lessonViewCodeBtn.textContent = state.lessonShowCode ? 'Aperçu rendu' : 'Code source';
@@ -2997,6 +3010,7 @@
     }
     input.value = insert;
     lesson.content = insert;
+    updateLessonCodeHighlight();
     input.focus();
     input.setSelectionRange(Math.min(start, end), Math.max(start, end));
     scheduleLessonSave();
@@ -3385,12 +3399,21 @@
     els.devRenderView.appendChild(frag);
   }
 
+  function updateDevCodeHighlight() {
+    if (els.devCodeHighlight && els.devTexInput) {
+      els.devCodeHighlight.innerHTML = window.latexHighlight.highlightLatex(els.devTexInput.value) + '\n';
+    }
+  }
+
   function updateDevModeVisibility() {
     if (els.devRenderView) {
       show(els.devRenderView, !state.devShowCode);
     }
-    if (els.devTexInput) {
-      show(els.devTexInput, state.devShowCode);
+    if (els.devCodeEditor) {
+      show(els.devCodeEditor, state.devShowCode);
+      if (state.devShowCode) {
+        updateDevCodeHighlight();
+      }
     }
     if (els.devViewCodeBtn) {
       els.devViewCodeBtn.textContent = state.devShowCode ? 'Aperçu rendu' : 'Code source';
@@ -3570,6 +3593,7 @@
     }
     input.value = insert;
     dev.content = insert;
+    updateDevCodeHighlight();
     input.focus();
     input.setSelectionRange(Math.min(start, end), Math.max(start, end));
     scheduleDevSave();
@@ -3696,12 +3720,19 @@
   }
   if (els.lessonTexInput) {
     els.lessonTexInput.addEventListener('input', () => {
+      updateLessonCodeHighlight();
       const lesson = getActiveLesson();
       if (!lesson) {
         return;
       }
       lesson.content = els.lessonTexInput.value;
       scheduleLessonSave();
+    });
+    els.lessonTexInput.addEventListener('scroll', () => {
+      if (els.lessonCodeHighlight) {
+        els.lessonCodeHighlight.scrollTop = els.lessonTexInput.scrollTop;
+        els.lessonCodeHighlight.scrollLeft = els.lessonTexInput.scrollLeft;
+      }
     });
   }
   if (els.lessonViewCodeBtn) {
@@ -3874,12 +3905,19 @@
   }
   if (els.devTexInput) {
     els.devTexInput.addEventListener('input', () => {
+      updateDevCodeHighlight();
       const dev = getActiveDev();
       if (!dev) {
         return;
       }
       dev.content = els.devTexInput.value;
       scheduleDevSave();
+    });
+    els.devTexInput.addEventListener('scroll', () => {
+      if (els.devCodeHighlight) {
+        els.devCodeHighlight.scrollTop = els.devTexInput.scrollTop;
+        els.devCodeHighlight.scrollLeft = els.devTexInput.scrollLeft;
+      }
     });
   }
   if (els.devViewCodeBtn) {

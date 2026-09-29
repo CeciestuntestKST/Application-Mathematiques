@@ -1581,17 +1581,60 @@ html, body {
   flex-shrink: 0;
 }
 
-#lesson-tex-input {
+/* ---------- Éditeurs de code LaTeX (Plans / Développements) ---------- */
+.code-editor {
+  position: relative;
   flex: 1;
-  resize: none;
+  min-height: 0;
   background: var(--vs-bg-deep);
+}
+.code-highlight {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 12px 16px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
   color: var(--vs-text-bright);
+  pointer-events: none;
+  user-select: none;
+}
+.code-highlight .tok-comment { color: var(--tok-comment); font-style: italic; }
+.code-highlight .tok-command { color: var(--tok-command); }
+.code-highlight .tok-environment { color: var(--tok-environment); }
+.code-highlight .tok-brace { color: var(--tok-brace); }
+.code-highlight .tok-math { color: var(--tok-math); }
+.code-highlight .tok-special { color: var(--tok-special); }
+.code-highlight .tok-operator { color: var(--tok-operator); }
+#lesson-tex-input,
+#dev-tex-input {
+  position: absolute;
+  inset: 0;
+  resize: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--vs-text-bright);
   border: none;
   outline: none;
   padding: 12px 16px;
   font-family: Consolas, "Courier New", monospace;
   font-size: 13px;
   line-height: 1.55;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
+}
+#lesson-tex-input::placeholder,
+#dev-tex-input::placeholder {
+  color: var(--vs-text-dim);
+}
+#lesson-tex-input::selection,
+#dev-tex-input::selection {
+  background: rgba(51, 153, 255, 0.35);
 }
 
 /* ---------- Leçons d'oral : panneau d'import ---------- */
@@ -2133,18 +2176,7 @@ html, body {
   min-width: 0;
 }
 
-#dev-tex-input {
-  flex: 1;
-  resize: none;
-  background: var(--vs-bg-deep);
-  color: var(--vs-text-bright);
-  border: none;
-  outline: none;
-  padding: 12px 16px;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 13px;
-  line-height: 1.55;
-}
+/* dev-tex-input : styles partagés avec lesson-tex-input (voir .code-editor) */
 
 #dev-side-pane {
   display: flex;

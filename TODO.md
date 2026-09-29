@@ -76,7 +76,7 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 
 ### Fait
 - [x] **Thème clair / sombre commutable** : bouton « Thème » en bas de la barre latérale — bascule instantanée via `html[data-theme="light"]` (jeu complet de variables CSS claires, code couleur des natures de notions et couleurs de tokens adaptés), préférence persistée dans `prefs.json` via les IPC génériques `app:get-pref` / `app:set-pref`.
-- [x] **Coloration syntaxique** du code source déroulé (bascule « Code source » des notions) : tokenizer LaTeX `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements `\begin{...}`/`\end{...}`, accolades, mode math `$...$`, caractères spéciaux ; couleurs adaptées aux deux thèmes via variables `--tok-*`.
+- [x] **Coloration syntaxique** du code source déroulé (bascule « Code source » des notions) **et des éditeurs de code des sections Plans et Développements** (coloration en direct pendant la frappe : `<pre>` surligneur derrière le `textarea` transparent, synchronisation saisie + défilement, rafraîchi aussi à l'insertion d'une notion au curseur) : tokenizer LaTeX `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements `\begin{...}`/`\end{...}`, accolades, mode math `$...$`, caractères spéciaux ; couleurs adaptées aux deux thèmes via variables `--tok-*`.
 
 ### À faire
 - [ ] **Statistiques de révision** : compteur de vues par notion, badge « souvent revue ».
