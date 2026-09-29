@@ -2322,6 +2322,28 @@
       hint.className = 'lesson-card-hint';
       hint.textContent = `${plans} plan${plans > 1 ? 's' : ''} · ${devs.length} d\u00e9v.${devs.length > 1 ? 's' : ''}`;
       card.appendChild(hint);
+      const missing = [];
+      if (plans === 0) {
+        missing.push('aucun plan associ\u00e9');
+      }
+      if (devs.length === 0) {
+        missing.push('aucun d\u00e9veloppement associ\u00e9');
+      }
+      if (missing.length > 0 || (plans > 0 && devs.length > 0 && devs.length < 3)) {
+        const alertBadge = document.createElement('span');
+        alertBadge.className = 'oral-card-alert';
+        if (missing.length > 0) {
+          alertBadge.classList.add('alert-red');
+          alertBadge.textContent = '!';
+          alertBadge.title = `Attention : ${missing.join(' et ')}`;
+        } else {
+          alertBadge.classList.add('alert-yellow');
+          alertBadge.textContent = '~';
+          const devWord = devs.length > 1 ? 'd\u00e9veloppements' : 'd\u00e9veloppement';
+          alertBadge.title = `Attention : seulement ${devs.length} ${devWord} pour ${plans} plan${plans > 1 ? 's' : ''}`;
+        }
+        card.appendChild(alertBadge);
+      }
       card.addEventListener('click', () => {
         state.activeOralNumber = number;
         state.activeOralPlanId = null;

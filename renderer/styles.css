@@ -1860,6 +1860,29 @@ html, body {
   flex: 1;
   min-height: 0;
 }
+.oral-card-alert {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: help;
+  z-index: 1;
+}
+.oral-card-alert.alert-red {
+  background: var(--vs-danger);
+  color: #fff;
+}
+.oral-card-alert.alert-yellow {
+  background: #d6a700;
+  color: #fff;
+}
 
 #oral-detail-body {
   display: flex;
