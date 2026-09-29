@@ -1482,6 +1482,11 @@ html, body {
   letter-spacing: 0.05em;
 }
 
+.lesson-card-title.untitled {
+  color: var(--vs-danger);
+  font-style: italic;
+}
+
 .lesson-card-title {
   font-size: 13.5px;
   color: var(--vs-text-bright);

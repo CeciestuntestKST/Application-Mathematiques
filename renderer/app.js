@@ -2313,6 +2313,9 @@
       card.appendChild(numberEl);
       const title = document.createElement('span');
       title.className = 'lesson-card-title';
+      if (!registered) {
+        title.classList.add('untitled');
+      }
       title.textContent = registered ? registered.title : 'Sans titre';
       card.appendChild(title);
       const hint = document.createElement('span');
