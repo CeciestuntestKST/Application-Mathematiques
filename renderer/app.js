@@ -6,6 +6,7 @@
     activityIcons: document.querySelectorAll('.activity-icon'),
     openFolderBtn: document.getElementById('btn-open-folder'),
     rescanBtn: document.getElementById('btn-rescan'),
+    themeToggle: document.getElementById('theme-toggle'),
     folderDisplay: document.getElementById('folder-display'),
     coursList: document.getElementById('cours-list'),
     emptyState: document.getElementById('empty-state'),
@@ -148,24 +149,24 @@
   const notionViewCache = new Map();
 
   const ENV_COLORS = {
-    df: '#4fc1ff',
-    dfprop: '#73c99a',
-    prop: '#c586c0',
-    tm: '#f4a464',
-    lm: '#d7a3f5',
-    cor: '#e2a5c4',
-    ra: '#a3c4e2',
-    re: '#dcdcaa',
-    not: '#9ad5c0',
-    nt: '#9ad5c0',
-    ex: '#ce9178',
-    exo: '#d0a4e8',
-    qs: '#98c379',
-    proof: '#9a9a9a'
+    df: 'var(--env-df)',
+    dfprop: 'var(--env-dfprop)',
+    prop: 'var(--env-prop)',
+    tm: 'var(--env-tm)',
+    lm: 'var(--env-lm)',
+    cor: 'var(--env-cor)',
+    ra: 'var(--env-ra)',
+    re: 'var(--env-re)',
+    not: 'var(--env-not)',
+    nt: 'var(--env-nt)',
+    ex: 'var(--env-ex)',
+    exo: 'var(--env-exo)',
+    qs: 'var(--env-qs)',
+    proof: 'var(--env-proof)'
   };
 
   function notionEnvColor(notion) {
-    return ENV_COLORS[notion.environment] || '#cccccc';
+    return ENV_COLORS[notion.environment] || 'var(--vs-text)';
   }
 
   function show(el, visible) {
@@ -1957,7 +1958,7 @@
 
     const sourceCode = document.createElement('pre');
     sourceCode.className = 'notion-source-code';
-    sourceCode.textContent = notionToLatex(notion);
+    sourceCode.innerHTML = window.latexHighlight.highlightLatex(notionToLatex(notion));
     wrap.appendChild(sourceCode);
 
     return wrap;
@@ -4113,11 +4114,42 @@
     }
   }
 
+  function applyTheme(theme) {
+    const light = theme === 'light';
+    document.documentElement.dataset.theme = light ? 'light' : '';
+    if (els.themeToggle) {
+      els.themeToggle.textContent = light ? '\u263E Th\u00E8me' : '\u2600 Th\u00E8me';
+      els.themeToggle.title = light ? 'Passer en th\u00E8me sombre' : 'Passer en th\u00E8me clair';
+    }
+  }
+
+  async function initTheme() {
+    let theme = null;
+    try {
+      theme = await window.api.getPref('theme');
+    } catch (err) {
+      theme = null;
+    }
+    applyTheme(theme === 'light' ? 'light' : 'dark');
+    if (els.themeToggle) {
+      els.themeToggle.addEventListener('click', async () => {
+        const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+        applyTheme(next);
+        try {
+          await window.api.setPref({ theme: next });
+        } catch (err) {
+          console.error('impossible de sauvegarder le thème:', err);
+        }
+      });
+    }
+  }
+
   async function init() {
     const stateResult = await window.api.getState();
     if (stateResult.prefsError) {
       console.error('prefsError:', stateResult.prefsError);
     }
+    await initTheme();
     if (stateResult.folder) {
       els.folderDisplay.textContent = stateResult.folder;
       els.folderDisplay.title = stateResult.folder;

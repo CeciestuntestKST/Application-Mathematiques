@@ -172,6 +172,28 @@ ipcMain.handle('app:select-folder', async () => {
 
 ipcMain.handle('app:get-version', () => app.getVersion());
 
+ipcMain.handle('app:get-pref', (_event, key) => {
+  if (typeof key !== 'string' || !key) {
+    return null;
+  }
+  const prefs = loadPrefs();
+  return key in prefs ? prefs[key] : null;
+});
+
+ipcMain.handle('app:set-pref', (_event, patch) => {
+  if (!patch || typeof patch !== 'object') {
+    return { error: 'invalid-patch' };
+  }
+  const allowed = {};
+  for (const key of Object.keys(patch)) {
+    if (/^[a-z][a-zA-Z0-9]{0,30}$/.test(key)) {
+      allowed[key] = patch[key];
+    }
+  }
+  updatePrefs(allowed);
+  return { ok: true };
+});
+
 ipcMain.handle('app:get-state', async () => {
   const prefs = loadPrefs();
   return {

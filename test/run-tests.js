@@ -44,6 +44,7 @@ const {
   normalizeLessonNumbers
 } = require('../lib/dev-files');const {  makeOralLessonId,  normalizeOralLesson,  readOralRegistry,  writeOralRegistry,  saveOralLesson,  deleteOralLesson} = require('../lib/oral-files');
 const texExport = require('../lib/tex-export');
+const latexHighlight = require('../lib/latex-highlight');
 
 function makeTempFolder() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'maths-app-test-'));
@@ -816,6 +817,27 @@ test('buildStandaloneTex pour un développement : titre échappé, préambule de
   assert.ok(tex.includes('Corps du dev'));
   assert.ok(!tex.includes('dev-meta'));
   assert.ok(tex.includes('\\end{document}'));
+});
+
+/* ---------- latex-highlight ---------- */
+test('tokenizeLatex sépare commentaires, commandes et texte', () => {
+  const tokens = latexHighlight.tokenizeLatex('% note\n\\section{Intro}');
+  assert.strictEqual(tokens[0].type, 'comment');
+  assert.ok(tokens[0].value.startsWith('%'));
+  const cmd = tokens.find((t) => t.type === 'command');
+  assert.ok(cmd && cmd.value === '\\section');
+});
+
+test('highlightLatex colore les environnements begin/end et échappe le HTML', () => {
+  const html = latexHighlight.highlightLatex('\\begin{df}{Titre}{}\n$a < b$\n\\end{df}');
+  assert.ok(html.includes('tok-environment'));
+  assert.ok(html.includes('&lt;'));
+  assert.ok(!html.includes('<b>'));
+});
+
+test('highlightLatex gère le texte simple sans balise parasite', () => {
+  const html = latexHighlight.highlightLatex('Texte simple.');
+  assert.strictEqual(html, 'Texte simple.');
 });
 
 /* ---------- oral-files ---------- */

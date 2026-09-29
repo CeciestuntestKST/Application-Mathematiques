@@ -21,6 +21,88 @@
   --vs-toolbar: #1f1f1f;
   --vs-canvas-bg: #313131;
   --vs-katex-text: #dcdcdc;
+  --vs-button-text: #ffffff;
+  --vs-scrollbar-thumb: #4e4e4e;
+  --vs-empty-icon: #3a3a3a;
+  --vs-error-bg: #5a1d1d;
+  --vs-error-text: #ff9d9d;
+  --vs-danger: #f48771;
+  --vs-success: #73c99a;
+  --vs-link: #4fc1ff;
+  --env-df: #4fc1ff;
+  --env-dfprop: #73c99a;
+  --env-prop: #c586c0;
+  --env-tm: #f4a464;
+  --env-lm: #d7a3f5;
+  --env-cor: #e2a5c4;
+  --env-ra: #a3c4e2;
+  --env-re: #dcdcaa;
+  --env-not: #9ad5c0;
+  --env-nt: #9ad5c0;
+  --env-ex: #ce9178;
+  --env-exo: #d0a4e8;
+  --env-qs: #98c379;
+  --env-proof: #9a9a9a;
+  --tok-comment: #6a9955;
+  --tok-command: #4fc1ff;
+  --tok-environment: #c586c0;
+  --tok-brace: #ffd700;
+  --tok-math: #ce9178;
+  --tok-operator: #d4d4d4;
+  --tok-special: #f4a464;
+}
+html[data-theme="light"] {
+  --vs-bg: #ffffff;
+  --vs-bg-deep: #f6f7f9;
+  --vs-bg-panel: #f3f4f6;
+  --vs-sidebar: #f3f4f6;
+  --vs-sidebar-hover: #e8eaed;
+  --vs-sidebar-active: #dfe3e8;
+  --vs-activity-bar: #f3f4f6;
+  --vs-border: #dcdfe4;
+  --vs-border-strong: #c4c9d0;
+  --vs-text: #333333;
+  --vs-text-bright: #111111;
+  --vs-text-dim: #6b7280;
+  --vs-accent: #1677b3;
+  --vs-accent-hover: #0e639c;
+  --vs-selected: #cfe8f7;
+  --vs-focus: #1677b3;
+  --vs-button-bg: #1677b3;
+  --vs-button-hover: #0e639c;
+  --vs-input-bg: #ffffff;
+  --vs-toolbar: #eceef1;
+  --vs-canvas-bg: #d8dade;
+  --vs-katex-text: #1a1a1a;
+  --vs-button-text: #ffffff;
+  --vs-scrollbar-thumb: #b0b4ba;
+  --vs-empty-icon: #a0a4aa;
+  --vs-error-bg: #fdeaea;
+  --vs-error-text: #b03030;
+  --vs-danger: #c0504a;
+  --vs-success: #2f7d4f;
+  --vs-link: #0e6ea8;
+  --env-df: #0e6ea8;
+  --env-dfprop: #2f7d4f;
+  --env-prop: #93327e;
+  --env-tm: #b05a1b;
+  --env-lm: #7b3fb5;
+  --env-cor: #a4407d;
+  --env-ra: #3f6a94;
+  --env-re: #8a7500;
+  --env-not: #1c7a63;
+  --env-nt: #1c7a63;
+  --env-ex: #9c4a1f;
+  --env-exo: #7b3fa8;
+  --env-qs: #3f7d24;
+  --env-proof: #6b7280;
+  --tok-comment: #3f7d24;
+  --tok-command: #0e6ea8;
+  --tok-environment: #93327e;
+  --tok-brace: #8a7500;
+  --tok-math: #9c4a1f;
+  --tok-operator: #333333;
+  --tok-special: #b05a1b;
 }
 
 * {
@@ -109,7 +191,7 @@ html, body {
   border: 1px solid transparent;
   border-radius: 3px;
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   cursor: pointer;
   font-size: 12px;
 }
@@ -267,14 +349,14 @@ html, body {
   padding: 4px 9px;
   font-size: 11px;
   cursor: pointer;
-  background: #2c7fb8;
-  color: #fff;
+  background: var(--vs-button-bg);
+  color: var(--vs-button-text);
   border: none;
   border-radius: 3px;
 }
 
 #update-banner button:hover {
-  background: #3a93cf;
+  background: var(--vs-button-hover);
 }
 
 #update-banner.error {
@@ -283,7 +365,7 @@ html, body {
 }
 
 #update-banner .update-link {
-  color: #4fc1ff;
+  color: var(--vs-link);
   cursor: pointer;
   text-decoration: underline;
   flex-shrink: 0;
@@ -368,7 +450,7 @@ html, body {
 
 .empty-icon {
   font-size: 60px;
-  color: #3a3a3a;
+  color: var(--vs-empty-icon);
   line-height: 1;
 }
 
@@ -946,8 +1028,8 @@ html, body {
 }
 
 .notion-tab-close-all:hover {
-  color: #ff9d9d;
-  border-color: #ff9d9d;
+  color: var(--vs-error-text);
+  border-color: var(--vs-error-text);
   background: var(--vs-sidebar-hover);
 }
 
@@ -999,7 +1081,7 @@ html, body {
 }
 
 .notion-tab-close:hover {
-  color: #ff9d9d;
+  color: var(--vs-error-text);
 }
 
 #notion-views {
@@ -1040,7 +1122,7 @@ html, body {
   padding: 2px 8px;
   border-radius: 3px;
   background: var(--vs-accent);
-  color: #ffffff;
+  color: var(--vs-button-text);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1102,8 +1184,8 @@ html, body {
 }
 
 .notion-body code.latex-error {
-  background: #5a1d1d;
-  color: #ff9d9d;
+  background: var(--vs-error-bg);
+  color: var(--vs-error-text);
   padding: 1px 4px;
   border-radius: 3px;
   font-size: 11px;
@@ -1170,8 +1252,8 @@ html, body {
 }
 
 .notion-source-copy.copied {
-  color: #73c99a;
-  border-color: #73c99a;
+  color: var(--vs-success);
+  border-color: var(--vs-success);
 }
 
 .notion-source-code {
@@ -1183,6 +1265,20 @@ html, body {
   white-space: pre-wrap;
   margin: 0;
   color: var(--vs-text);
+}.notion-source-code .tok-comment { color: var(--tok-comment); font-style: italic; }
+.notion-source-code .tok-command { color: var(--tok-command); }
+.notion-source-code .tok-environment { color: var(--tok-environment); }
+.notion-source-code .tok-brace { color: var(--tok-brace); }
+.notion-source-code .tok-math { color: var(--tok-math); }
+.notion-source-code .tok-special { color: var(--tok-special); }
+.notion-source-code .tok-operator { color: var(--tok-operator); }
+#theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#theme-toggle svg {
+  display: block;
 }
 
 .notion.notions-showing-source .notion-source-code {
@@ -1266,12 +1362,13 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4e4e4e;
+  background: var(--vs-scrollbar-thumb);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b;
+  background: var(--vs-scrollbar-thumb);
+  filter: brightness(1.2);
 }
 
 
@@ -1301,7 +1398,7 @@ html, body {
 
 #lesson-create {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid var(--vs-button-bg);
   border-radius: 4px;
   padding: 7px 14px;
@@ -1441,8 +1538,8 @@ html, body {
 }
 
 #lesson-delete:hover {
-  color: #f48771;
-  border-color: #f48771;
+  color: var(--vs-danger);
+  border-color: var(--vs-danger);
 }
 .export-btn {
   background: transparent;
@@ -1576,7 +1673,7 @@ html, body {
 
 #lesson-create-confirm {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid var(--vs-button-bg);
   border-radius: 4px;
   padding: 5px 12px;
@@ -1631,7 +1728,7 @@ html, body {
 
 #oral-create {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid var(--vs-button-bg);
   border-radius: 4px;
   padding: 7px 14px;
@@ -1943,7 +2040,7 @@ html, body {
 
 #dev-create {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid var(--vs-button-bg);
   border-radius: 4px;
   padding: 7px 14px;
@@ -1977,7 +2074,7 @@ html, body {
 
 #dev-create-confirm {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid var(--vs-button-bg);
   border-radius: 4px;
   padding: 5px 12px;
@@ -2163,8 +2260,8 @@ html, body {
 }
 
 #dev-delete:hover {
-  color: #f48771;
-  border-color: #f48771;
+  color: var(--vs-danger);
+  border-color: var(--vs-danger);
 }
 
 
@@ -2640,7 +2737,7 @@ html, body {
 
 #app-dialog-ok {
   background: var(--vs-button-bg);
-  color: #ffffff;
+  color: var(--vs-button-text);
   border: 1px solid transparent;
 }
 

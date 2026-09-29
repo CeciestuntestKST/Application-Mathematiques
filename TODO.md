@@ -9,10 +9,10 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 | 1 — Cœur « préparation agrégation » | 20 | 0 (+3 reportés) |
 | 2 — Confort quotidien | 0 | 4 |
 | 3 — Section Cours (PDF) | 1 | 2 |
-| 4 — Graphisme / polish | 0 | 3 (+2 idées) |
+| 4 — Graphisme / polish | 2 | 1 (+2 idées) |
 | 5 — Technique | 0 | 2 |
 | Déjà livré (pour mémoire) | 12 | — |
-| **Total** | **33** | **11 (+5 reportés/idées)** |
+| **Total** | **35** | **9 (+5 reportés/idées)** |
 
 **Priorité 1 terminée.** Prochaines étapes possibles : raccourcis clavier globaux (priorité 2), surlignage persistant des PDF (priorité 3).
 
@@ -74,8 +74,11 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 
 ## Priorité 4 — Graphisme / polish
 
-- [ ] **Thème clair / sombre commutable** (les variables CSS existent déjà dans `renderer/styles.css`).
-- [ ] **Coloration syntaxique** du code source déroulé (bascule « Code source » des notions).
+### Fait
+- [x] **Thème clair / sombre commutable** : bouton « Thème » en bas de la barre latérale — bascule instantanée via `html[data-theme="light"]` (jeu complet de variables CSS claires, code couleur des natures de notions et couleurs de tokens adaptés), préférence persistée dans `prefs.json` via les IPC génériques `app:get-pref` / `app:set-pref`.
+- [x] **Coloration syntaxique** du code source déroulé (bascule « Code source » des notions) : tokenizer LaTeX `lib/latex-highlight.js` (Node pur, testé, double usage Node/window) — commentaires, commandes, environnements `\begin{...}`/`\end{...}`, accolades, mode math `$...$`, caractères spéciaux ; couleurs adaptées aux deux thèmes via variables `--tok-*`.
+
+### À faire
 - [ ] **Statistiques de révision** : compteur de vues par notion, badge « souvent revue ».
 
 ### Idées (non priorisées)
@@ -99,6 +102,6 @@ Référentiel des fonctionnalités envisagées. Les statuts : **À faire** (prio
 - [x] Installateur Windows automatique via GitHub Actions (tag `v*` → release).
 - [x] **Mise à jour automatique** de l'app installée (electron-updater + releases GitHub) : bannière dans le footer de la sidebar, téléchargement en arrière-plan, bouton « Redémarrer » pour installer ; silence en dev et non-packagé ; `latest.yml` attaché à la release.
 - [x] Raccourcis basiques d'app (recherche, navigation dans la grille).
-- [x] **Suite de tests unitaires** (`npm test`) : 58 tests sur le parsing `settings.tex`, l'extraction des notions, le modèle (nommage, preuves, fusion), les fichiers de leçons (`lesson-files.js`), de développements (`dev-files.js`), le registre de l'oral (`oral-files.js`), l'export `.tex` autonome (`tex-export.js`) et le watcher — sans Electron.
+- [x] **Suite de tests unitaires** (`npm test`) : 61 tests sur le parsing `settings.tex`, l'extraction des notions, le modèle (nommage, preuves, fusion), les fichiers de leçons (`lesson-files.js`), de développements (`dev-files.js`), le registre de l'oral (`oral-files.js`), l'export `.tex` autonome (`tex-export.js`), la coloration syntaxique (`latex-highlight.js`) et le watcher — sans Electron.
 - [x] **Version dans le titre de la fenêtre** : « Application Mathématiques vX.Y.Z », lue dynamiquement depuis `package.json` (aucune mise à jour manuelle à prévoir).
 - [x] **Bannière de mise à jour corrigée** : la fonction `initUpdateBanner` manquante a été implémentée (ReferenceError qui bloquait le renderer) ; bannière en bas de la sidebar — téléchargement avec pourcentage, bouton « Redémarrer » quand la mise à jour est prête, bouton « Réessayer » en cas d'erreur.
