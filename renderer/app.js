@@ -89,7 +89,6 @@
     lessonNumberLabel: document.getElementById('lesson-number-label'),
     lessonTitleInput: document.getElementById('lesson-title-input'),
     lessonSaveStatus: document.getElementById('lesson-save-status'),
-    lessonDeleteBtn: document.getElementById('lesson-delete'),
     lessonExportBtn: document.getElementById('lesson-export'),
     lessonTexInput: document.getElementById('lesson-tex-input'),
     lessonCodeEditor: document.getElementById('lesson-code-editor'),
@@ -112,7 +111,6 @@
     devBack: document.getElementById('dev-back'),
     devTitleInput: document.getElementById('dev-title-input'),
     devSaveStatus: document.getElementById('dev-save-status'),
-    devDeleteBtn: document.getElementById('dev-delete'),
     devExportBtn: document.getElementById('dev-export'),
     devTexInput: document.getElementById('dev-tex-input'),
     devCodeEditor: document.getElementById('dev-code-editor'),
@@ -3841,9 +3839,6 @@
       }
     });
   }
-  if (els.lessonDeleteBtn) {
-    els.lessonDeleteBtn.addEventListener('click', () => deleteLessonById(null));
-  }
   if (els.lessonTitleInput) {
     els.lessonTitleInput.addEventListener('input', () => {
       const lesson = getActiveLesson();
@@ -4025,9 +4020,6 @@
         hideCreateDevForm();
       }
     });
-  }
-  if (els.devDeleteBtn) {
-    els.devDeleteBtn.addEventListener('click', () => deleteDevById(null));
   }
   if (els.devTitleInput) {
     els.devTitleInput.addEventListener('input', () => {
